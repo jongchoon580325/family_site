@@ -1,5 +1,11 @@
 # Project Commit History
 
+11\.
+
+- **Date**: 2025-12-26 19:50:00
+- **Commit Hash**: `To be updated`
+- **Summary**: PWA(Progressive Web App) 설정 추가 - 모바일 '홈 화면에 추가' 시 앱 아이콘(Favicon 기반) 및 Manifest.json 적용 완료.
+
 10\.
 
 - **Date**: 2025-12-26 19:00:00
