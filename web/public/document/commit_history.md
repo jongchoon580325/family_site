@@ -3,7 +3,7 @@
 12\.
 
 - **Date**: 2025-12-26 20:00:00
-- **Commit Hash**: `To be updated`
+- **Commit Hash**: `d95e268`
 - **Summary**: 모바일 반응형 디자인 최적화 - Photo 페이지의 타이틀 및 갤러리 섹션 간 여백(Padding/Margin)을 대폭 축소하여 가독성 개선 (Desktop 레이아웃 유지).
 
 11\.
