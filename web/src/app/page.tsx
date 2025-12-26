@@ -131,7 +131,7 @@ function NewFamilySection() {
             viewport={{ once: true }}
             className="font-serif text-4xl md:text-5xl text-white"
           >
-            A new family begins. <span className="text-amber-500">새 가족의 시작</span>
+            A new family begins. <br className="md:hidden" /> <span className="text-amber-500">새 가족의 시작</span>
           </motion.h2>
         </motion.div>
 

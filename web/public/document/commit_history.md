@@ -1,5 +1,11 @@
 # Project Commit History
 
+15\.
+
+- **Date**: 2025-12-26 20:30:00
+- **Commit Hash**: `To be updated`
+- **Summary**: 랜딩 페이지 "새 가족의 시작" 섹션 모바일 타이틀 2단 분리(줄바꿈) 적용.
+
 14\.
 
 - **Date**: 2025-12-26 20:20:00
