@@ -1,5 +1,11 @@
 # Project Commit History
 
+14\.
+
+- **Date**: 2025-12-26 20:20:00
+- **Commit Hash**: `To be updated`
+- **Summary**: 랜딩 페이지 모바일 UI 개선 - 성경 구절 폰트 사이즈 축소(3xl->xl) 및 '새 생명의 시작' 섹션 타이틀 2단 분리(줄바꿈) 적용.
+
 13\.
 
 - **Date**: 2025-12-26 20:10:00

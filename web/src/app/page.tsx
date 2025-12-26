@@ -86,7 +86,7 @@ function BibleVerseSection() {
         </div>
 
         {/* 한글 */}
-        <p className="font-serif text-2xl md:text-3xl text-stone-200 leading-relaxed">
+        <p className="font-serif text-xl md:text-3xl text-stone-200 leading-relaxed">
           "태초에 하나님이 천지를 창조하시니라"
         </p>
 
@@ -230,7 +230,7 @@ function NewLifeSection() {
             viewport={{ once: true }}
             className="font-serif text-4xl md:text-5xl text-white"
           >
-            A new life begins. <span className="text-amber-500">새 생명의 시작</span>
+            A new life begins. <br className="md:hidden" /> <span className="text-amber-500">새 생명의 시작</span>
           </motion.h2>
         </motion.div>
 
