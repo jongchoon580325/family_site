@@ -8,8 +8,13 @@ import { useStoryStore, type StoryItem } from "@/store/story-store";
 import { useEffect, useState } from "react";
 
 export default function StoryPage() {
-    const { stories } = useStoryStore();
+    const { stories, fetchStories, isLoading } = useStoryStore();
     const [selectedItem, setSelectedItem] = useState<StoryItem | null>(null);
+
+    // Fetch stories from Firebase on mount
+    useEffect(() => {
+        fetchStories();
+    }, [fetchStories]);
     // Prevent hydration mismatch
     // if (!isClient) { ... }
 

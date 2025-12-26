@@ -1,0 +1,26 @@
+# Section 3 결혼사진 섹션 구현 가이드
+
+* card_layout_0.png 와 같은 레이아웃으로 수정.
+* 그리드 배열 : 3 X 2 Grid
+* 2단 구성으로 구현하는 로직 : 1단, 결혼식 사진 | 2단, 신랑신부 카드
+* 특히 2단 신랑.신부카드(card_layout_1.png)와 같은 3단 텍스트 레이아웃으로 구현
+  - 아래 '신랑.신부 카드 컨텐츠' 참조
+
+1. 카드 외곽선 : solid 2px, round 15px | 오른쪽 하단 외곽 그림자 효과 적용
+2. 신랑.신부 카드 : solid 2px, round 15px | 오른쪽 하단 외곽 그림자 효과 적용
+3. 결혼식 사진 이미지는 /public/images/couple/ 에 있는 파일명과 아래 4번 데이터와 매핑하여 적용
+4. 신랑.신부 카드 컨텐츠 내용
+  1-나기봉.김필자 : 신랑 나기봉 . 신부 김필자 | (1957. 06. 15) | Na Ki Bong . Kim Phil Ja
+  2-나종춘.장명애 : 신랑 나종춘 . 신부 장명애 | (1982. 12. 09) | Na Jong Choon . Jang Myung Eai
+  3-나종섭.김양진 : 신랑 나종섭 . 신부 김양진 | (1997. 04. 12) | Na Jong Seob . Kim Yang Jin
+  4-나신숙.김진수 : 신랑 김진수 . 신부 나신숙 | (1994. 03. 01) | Na Shin Sook . Kim Jin Soo
+  5-나한나.정기원 : 신랑 정기원 . 신부 나한나 | (2016. 09. 24) | Na Han Na . Jung Ki Won
+  6-나요한.형정순 : 신랑 나요한 . 신부 형정순 | (2014. 11. 29) | Na Yo Han . Hyung Jung Soon
+~~~~~~~~~~~~~~~~~~~~~~~
+5. 신랑.신부 카드 link url
+  1-나기봉.김필자 : /photo/nakibong-kimphilja
+  2-나종춘.장명애 : /photo/najongchoon-jangmyeongae
+  3-나종섭.김양진 : /photo/najongseob-kimyangjin
+  4-나신숙.김진수 : /photo/nashinsook-kimjinsu
+  5-나한나.정기원 : /photo/nahanna-jeongkiwon
+  6-나요한.형정순 : /photo/nayohan-hyeongjeongsun

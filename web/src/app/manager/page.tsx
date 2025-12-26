@@ -3,11 +3,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { ContentLayout } from "@/components/layout/content-layout";
 import { useStoryStore, StoryType } from "@/store/story-store";
-import { Settings, Upload, Image as ImageIcon, MessageSquare, Video, Trash2, CheckCircle, Save, Quote, X, AlertTriangle, ChevronLeft, ChevronRight, Pencil, TreeDeciduous, Images } from "lucide-react";
+import { Settings, Upload, Image as ImageIcon, MessageSquare, Video, Trash2, CheckCircle, Save, Quote, X, AlertTriangle, ChevronLeft, ChevronRight, Pencil, TreeDeciduous, Images, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { FamilyTreeEditor } from "@/components/manager/FamilyTreeEditor";
 import { GalleryEditor } from "@/components/manager/GalleryEditor";
+import { storage } from "@/lib/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 type MenuSection = 'story-upload' | 'site-settings' | 'family-tree' | 'gallery';
 
@@ -18,8 +20,8 @@ function ConfirmModal({
     onConfirm,
     title,
     message,
-    confirmText = "Confirm",
-    cancelText = "Cancel",
+    confirmText = "확인",
+    cancelText = "취소",
     variant = "danger"
 }: {
     isOpen: boolean;
@@ -142,7 +144,7 @@ function AlertModal({
                         onClick={onClose}
                         className="px-6 py-2 bg-stone-800 text-white rounded-lg hover:bg-stone-900 transition-colors font-medium"
                     >
-                        OK
+                        확인
                     </button>
                 </div>
             </motion.div>
@@ -155,9 +157,10 @@ export default function ManagerPage() {
     const [showResetConfirm, setShowResetConfirm] = useState(false);
 
     const handleResetConfirm = () => {
-        useStoryStore.getState().clearAllStories();
+        // Firebase를 사용하므로 localStorage 초기화 불필요
+        // 개별 삭제 기능으로 대체
         setShowResetConfirm(false);
-        window.location.reload();
+        alert('Firebase 연동 후에는 개별 삭제 기능을 사용해주세요.');
     };
 
     return (
@@ -171,10 +174,10 @@ export default function ManagerPage() {
                 isOpen={showResetConfirm}
                 onClose={() => setShowResetConfirm(false)}
                 onConfirm={handleResetConfirm}
-                title="Reset All Data?"
-                message="WARNING: This will delete ALL your uploaded stories and reset to default data. This action cannot be undone."
-                confirmText="Reset"
-                cancelText="Cancel"
+                title="모든 데이터를 초기화하시겠습니까?"
+                message="경고: 업로드한 모든 스토리가 삭제되고 기본 데이터로 초기화됩니다. 이 작업은 취소할 수 없습니다."
+                confirmText="초기화"
+                cancelText="취소"
                 variant="danger"
             />
 
@@ -306,7 +309,13 @@ export default function ManagerPage() {
 }
 
 function StoryUploadForm() {
-    const { addStory, stories, removeStory, updateStory, reorderStories } = useStoryStore();
+    const { addStory, stories, removeStory, updateStory, reorderStories, fetchStories, isLoading } = useStoryStore();
+
+    // Fetch stories on mount
+    useEffect(() => {
+        fetchStories();
+    }, [fetchStories]);
+
     const [type, setType] = useState<StoryType>('text');
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -316,10 +325,11 @@ function StoryUploadForm() {
     // Additional fields based on type
     const [author, setAuthor] = useState('');
     const [videoId, setVideoId] = useState('');
-    const [imageUrl, setImageUrl] = useState('/images/donates/card-01.png');
+    const [imageUrl, setImageUrl] = useState('');
+    const [isImageUploading, setIsImageUploading] = useState(false);
 
     // Modal State
-    const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
+    const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
     const [alertModal, setAlertModal] = useState<{ isOpen: boolean; title: string; message: string; variant: "success" | "error" | "info" }>({
         isOpen: false, title: '', message: '', variant: 'info'
     });
@@ -334,7 +344,7 @@ function StoryUploadForm() {
     );
 
     // Edit Mode State
-    const [editingId, setEditingId] = useState<number | null>(null);
+    const [editingId, setEditingId] = useState<string | null>(null);
 
     // Drag and Drop State
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
@@ -394,8 +404,18 @@ function StoryUploadForm() {
         setDate(story.date.replace(/\./g, '-')); // Convert YYYY.MM.DD to YYYY-MM-DD
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (type === 'image' && !imageUrl) {
+            setAlertModal({ isOpen: true, title: "이미지 필요", message: "이미지를 업로드해 주세요.", variant: "error" });
+            return;
+        }
+
+        if (isImageUploading) {
+            setAlertModal({ isOpen: true, title: "업로드 중", message: "이미지 업로드가 완료될 때까지 기다려 주세요.", variant: "info" });
+            return;
+        }
 
         const storyData = {
             type,
@@ -412,25 +432,25 @@ function StoryUploadForm() {
         try {
             if (editingId !== null) {
                 // Update existing story
-                updateStory(editingId, storyData);
-                setAlertModal({ isOpen: true, title: "Updated!", message: "Story has been updated successfully.", variant: "success" });
+                await updateStory(editingId, storyData);
+                setAlertModal({ isOpen: true, title: "수정 완료!", message: "스토리가 성공적으로 수정되었습니다.", variant: "success" });
             } else {
                 // Add new story
-                addStory(storyData);
-                setAlertModal({ isOpen: true, title: "Success!", message: "Story has been saved successfully.", variant: "success" });
+                await addStory(storyData);
+                setAlertModal({ isOpen: true, title: "저장 완료!", message: "스토리가 성공적으로 저장되었습니다.", variant: "success" });
             }
 
             // Reset Form
             resetForm();
         } catch (error) {
             console.error(error);
-            setAlertModal({ isOpen: true, title: "Storage Full", message: "Failed to save story. Please delete old items or clear data.", variant: "error" });
+            setAlertModal({ isOpen: true, title: "오류 발생", message: "스토리 저장에 실패했습니다. 다시 시도해 주세요.", variant: "error" });
         }
     };
 
-    const handleDeleteConfirm = () => {
+    const handleDeleteConfirm = async () => {
         if (deleteTarget !== null) {
-            removeStory(deleteTarget);
+            await removeStory(deleteTarget);
             setDeleteTarget(null);
         }
     };
@@ -442,10 +462,10 @@ function StoryUploadForm() {
                 isOpen={deleteTarget !== null}
                 onClose={() => setDeleteTarget(null)}
                 onConfirm={handleDeleteConfirm}
-                title="Delete Story?"
-                message="This action cannot be undone. Are you sure you want to delete this story?"
-                confirmText="Delete"
-                cancelText="Cancel"
+                title="스토리를 삭제하시겠습니까?"
+                message="이 작업은 취소할 수 없습니다. 정말 이 스토리를 삭제하시겠습니까?"
+                confirmText="삭제"
+                cancelText="취소"
                 variant="danger"
             />
 
@@ -596,7 +616,7 @@ function StoryUploadForm() {
                     {type === 'image' && (
                         <div>
                             <label className="block text-sm font-medium text-stone-700 mb-1">Image Upload</label>
-                            <ImageUploadArea value={imageUrl} onChange={setImageUrl} />
+                            <ImageUploadArea value={imageUrl} onChange={setImageUrl} onProcessing={setIsImageUploading} />
                         </div>
                     )}
                 </div>
@@ -734,71 +754,32 @@ interface ImagePreviewItem {
     file: File;
 }
 
-function ImageUploadArea({ value, onChange }: { value: string, onChange: (val: string) => void }) {
+function ImageUploadArea({ value, onChange, onProcessing }: { value: string, onChange: (val: string) => void, onProcessing?: (isProcessing: boolean) => void }) {
     const [isDragging, setIsDragging] = useState(false);
-    const [previews, setPreviews] = useState<ImagePreviewItem[]>([]);
-    const [isProcessing, setIsProcessing] = useState(false);
+    const [isInternalProcessing, setIsInternalProcessing] = useState(false);
 
-    const compressImage = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (event) => {
-                const img = document.createElement('img');
-                img.src = event.target?.result as string;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 800;
-                    const scaleSize = MAX_WIDTH / img.width;
-                    const width = (img.width > MAX_WIDTH) ? MAX_WIDTH : img.width;
-                    const height = (img.width > MAX_WIDTH) ? (img.height * scaleSize) : img.height;
-
-                    canvas.width = width;
-                    canvas.height = height;
-
-                    const ctx = canvas.getContext('2d');
-                    ctx?.drawImage(img, 0, 0, width, height);
-
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-                    resolve(dataUrl);
-                };
-                img.onerror = (error) => reject(error);
-            };
-            reader.onerror = (error) => reject(error);
-        });
+    const setProcessing = (processing: boolean) => {
+        setIsInternalProcessing(processing);
+        onProcessing?.(processing);
     };
 
-    const handleFiles = async (files: FileList | File[]) => {
-        const imageFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
-        if (imageFiles.length === 0) return;
+    const handleUpload = async (file: File) => {
+        if (!file.type.startsWith('image/')) return;
 
-        setIsProcessing(true);
-
+        setProcessing(true);
         try {
-            const newPreviews: ImagePreviewItem[] = await Promise.all(
-                imageFiles.map(async (file) => ({
-                    id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-                    dataUrl: await compressImage(file),
-                    file,
-                }))
-            );
+            // Firebase Storage에 업로드
+            const storageRef = ref(storage, `stories/${Date.now()}-${file.name}`);
+            await uploadBytes(storageRef, file);
+            const downloadUrl = await getDownloadURL(storageRef);
 
-            setPreviews(prev => [...prev, ...newPreviews]);
+            onChange(downloadUrl);
         } catch (error) {
-            console.error("Image processing failed:", error);
-            alert("이미지 처리에 실패했습니다. 다시 시도해주세요.");
+            console.error('Image upload failed:', error);
+            alert('이미지 업로드에 실패했습니다. 다시 시도해 주세요.');
+        } finally {
+            setProcessing(false);
         }
-
-        setIsProcessing(false);
-    };
-
-    const handleRemovePreview = (id: string) => {
-        setPreviews(prev => prev.filter(p => p.id !== id));
-    };
-
-    const handleSelectImage = (dataUrl: string) => {
-        onChange(dataUrl);
-        setPreviews([]);
     };
 
     const onDragOver = (e: React.DragEvent) => {
@@ -811,12 +792,12 @@ function ImageUploadArea({ value, onChange }: { value: string, onChange: (val: s
     const onDrop = (e: React.DragEvent) => {
         e.preventDefault();
         setIsDragging(false);
-        if (e.dataTransfer.files) {
-            handleFiles(e.dataTransfer.files);
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            handleUpload(e.dataTransfer.files[0]);
         }
     };
 
-    // 이미 선택된 이미지가 있는 경우
+    // 이미 선택된 이미지가 있는 경우 (이전 값 또는 업로드된 값)
     if (value && value !== '/images/donates/card-01.png') {
         return (
             <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-stone-200 group">
@@ -824,7 +805,7 @@ function ImageUploadArea({ value, onChange }: { value: string, onChange: (val: s
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <button
                         type="button"
-                        onClick={() => onChange('/images/donates/card-01.png')}
+                        onClick={() => onChange('')}
                         className="p-2 bg-white rounded-full text-red-500 hover:bg-red-50 transition-colors"
                     >
                         <Trash2 className="w-6 h-6" />
@@ -844,74 +825,30 @@ function ImageUploadArea({ value, onChange }: { value: string, onChange: (val: s
                 className={`
                     relative h-40 w-full rounded-xl border-2 border-dashed transition-all flex flex-col items-center justify-center gap-3 cursor-pointer
                     ${isDragging ? 'border-amber-500 bg-amber-50' : 'border-stone-300 hover:border-amber-400 hover:bg-stone-50'}
+                    ${isInternalProcessing ? 'pointer-events-none opacity-50' : ''}
                 `}
             >
                 <input
                     type="file"
                     accept="image/*"
-                    multiple
-                    onChange={(e) => e.target.files && handleFiles(e.target.files)}
+                    onChange={(e) => e.target.files && e.target.files[0] && handleUpload(e.target.files[0])}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    disabled={isInternalProcessing}
                 />
                 <div className="p-3 bg-white rounded-full shadow-sm">
-                    {isProcessing ? (
+                    {isInternalProcessing ? (
                         <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
                     ) : (
                         <Upload className={`w-8 h-8 ${isDragging ? 'text-amber-500' : 'text-stone-400'}`} />
                     )}
                 </div>
                 <div className="text-center">
-                    <p className="font-medium text-stone-700 text-sm">클릭 또는 드래그하여 업로드</p>
-                    <p className="text-xs text-stone-400 mt-1">여러 이미지를 선택할 수 있습니다 (최대 5MB)</p>
+                    <p className="font-medium text-stone-700 text-sm">
+                        {isInternalProcessing ? '업로드 중...' : '클릭 또는 드래그하여 업로드'}
+                    </p>
+                    <p className="text-xs text-stone-400 mt-1">이미지를 선택하면 자동 저장됩니다 (최대 5MB)</p>
                 </div>
             </div>
-
-            {/* 다중 이미지 미리보기 그리드 */}
-            {previews.length > 0 && (
-                <div className="bg-stone-50 rounded-xl p-3 border border-stone-200">
-                    <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-stone-700">
-                            {previews.length}개 이미지 선택됨 - 사용할 이미지를 클릭하세요
-                        </span>
-                        <button
-                            type="button"
-                            onClick={() => setPreviews([])}
-                            className="text-xs text-stone-500 hover:text-red-500"
-                        >
-                            전체 삭제
-                        </button>
-                    </div>
-                    <div className="grid grid-cols-4 gap-2">
-                        {previews.map((preview) => (
-                            <div
-                                key={preview.id}
-                                className="relative aspect-square rounded-lg overflow-hidden border-2 border-stone-200 group cursor-pointer hover:border-amber-500 transition-colors"
-                                onClick={() => handleSelectImage(preview.dataUrl)}
-                            >
-                                <Image
-                                    src={preview.dataUrl}
-                                    alt="Preview"
-                                    fill
-                                    className="object-cover"
-                                />
-                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <CheckCircle className="w-6 h-6 text-white" />
-                                </div>
-                                <button
-                                    type="button"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleRemovePreview(preview.id);
-                                    }}
-                                    className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                                >
-                                    <X className="w-3 h-3" />
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

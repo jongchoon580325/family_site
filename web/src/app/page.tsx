@@ -343,7 +343,7 @@ function WeddingCardsSection() {
   const coupleCards = [
     {
       id: 1,
-      image: '/images/couple/1-나기봉.김필자.png',
+      image: '/images/couple/01-nakibong-kimphilja.png',
       groomKr: '신랑 나기봉',
       brideKr: '신부 김필자',
       date: '1957. 06. 15',
@@ -353,7 +353,7 @@ function WeddingCardsSection() {
     },
     {
       id: 2,
-      image: '/images/couple/2-나종춘.장명애.png',
+      image: '/images/couple/02-najongchoon-jangmyeongae.png',
       groomKr: '신랑 나종춘',
       brideKr: '신부 장명애',
       date: '1982. 12. 09',
@@ -363,7 +363,7 @@ function WeddingCardsSection() {
     },
     {
       id: 3,
-      image: '/images/couple/3-나종섭.김양진.png',
+      image: '/images/couple/03-najongseob-kimyangjin.png',
       groomKr: '신랑 나종섭',
       brideKr: '신부 김양진',
       date: '1997. 04. 12',
@@ -373,7 +373,7 @@ function WeddingCardsSection() {
     },
     {
       id: 4,
-      image: '/images/couple/4-나신숙.김진수.png',
+      image: '/images/couple/04-nashinsook-kimjinsu.png',
       groomKr: '신랑 김진수',
       brideKr: '신부 나신숙',
       date: '1994. 03. 01',
@@ -383,7 +383,7 @@ function WeddingCardsSection() {
     },
     {
       id: 5,
-      image: '/images/couple/5-나한나.정기원.png',
+      image: '/images/couple/05-nahanna-jeongkiwon.png',
       groomKr: '신랑 정기원',
       brideKr: '신부 나한나',
       date: '2016. 09. 24',
@@ -393,7 +393,7 @@ function WeddingCardsSection() {
     },
     {
       id: 6,
-      image: '/images/couple/6-나요한.형정순.png',
+      image: '/images/couple/06-nayohan-hyeongjeongsun.png',
       groomKr: '신랑 나요한',
       brideKr: '신부 형정순',
       date: '2014. 11. 29',

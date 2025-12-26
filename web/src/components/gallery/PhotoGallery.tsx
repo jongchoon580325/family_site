@@ -254,7 +254,7 @@ function ScrollToTop() {
 
 // 메인 PhotoGallery 컴포넌트
 export function PhotoGallery({ category, title, description }: PhotoGalleryProps) {
-    const { getImagesByCategory, visibleCount, loadMore, resetVisibleCount } = useGalleryStore();
+    const { getImagesByCategory, visibleCount, loadMore, resetVisibleCount, fetchImages, isLoading } = useGalleryStore();
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const [isMounted, setIsMounted] = useState(false);
 
@@ -262,6 +262,13 @@ export function PhotoGallery({ category, title, description }: PhotoGalleryProps
     useEffect(() => {
         setIsMounted(true);
     }, []);
+
+    // Firebase에서 이미지 로드
+    useEffect(() => {
+        if (isMounted) {
+            fetchImages();
+        }
+    }, [isMounted, fetchImages]);
 
     const allImages = isMounted ? getImagesByCategory(category) : [];
     const visibleImages = allImages.slice(0, visibleCount);

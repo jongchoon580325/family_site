@@ -1,0 +1,3 @@
+- **Date**: 2025-12-25 18:03:24
+- **Commit Hash**: `8a6eb20ae4d0c51c2d98409d6b724714aa29c871`
+- **Summary**: family site 초기 설정(Next.js, 주요 기능 및 디렉토리 구조, 정적 자산 추가) 완료.

@@ -8,20 +8,20 @@ import { useState } from "react";
 
 // Artwork data
 const ARTWORKS = [
-    { id: 1, src: "/images/mom/어머니미술작품-01.jpg", title: "작품 01" },
-    { id: 2, src: "/images/mom/어머니미술작품-02.jpg", title: "작품 02" },
-    { id: 3, src: "/images/mom/어머니미술작품-03.jpg", title: "작품 03" },
-    { id: 4, src: "/images/mom/어머니미술작품-04.jpg", title: "작품 04" },
-    { id: 5, src: "/images/mom/어머니미술작품-05.jpg", title: "작품 05" },
-    { id: 6, src: "/images/mom/어머니미술작품-06.jpg", title: "작품 06" },
-    { id: 7, src: "/images/mom/어머니미술작품-07.jpg", title: "작품 07" },
-    { id: 8, src: "/images/mom/어머니미술작품-08.jpg", title: "작품 08" },
-    { id: 9, src: "/images/mom/어머니미술작품-09.jpg", title: "작품 09" },
-    { id: 10, src: "/images/mom/어머니미술작품-10.jpg", title: "작품 10" },
-    { id: 11, src: "/images/mom/어머니미술작품-11.jpg", title: "작품 11" },
-    { id: 12, src: "/images/mom/어머니미술작품-12.jpg", title: "작품 12" },
-    { id: 13, src: "/images/mom/어머니미술작품-13.jpg", title: "작품 13" },
-    { id: 14, src: "/images/mom/어머니미술작품-14.jpg", title: "작품 14" },
+    { id: 1, src: "/images/mom/mom-art-01.jpg", title: "작품 01" },
+    { id: 2, src: "/images/mom/mom-art-02.jpg", title: "작품 02" },
+    { id: 3, src: "/images/mom/mom-art-03.jpg", title: "작품 03" },
+    { id: 4, src: "/images/mom/mom-art-04.jpg", title: "작품 04" },
+    { id: 5, src: "/images/mom/mom-art-05.jpg", title: "작품 05" },
+    { id: 6, src: "/images/mom/mom-art-06.jpg", title: "작품 06" },
+    { id: 7, src: "/images/mom/mom-art-07.jpg", title: "작품 07" },
+    { id: 8, src: "/images/mom/mom-art-08.jpg", title: "작품 08" },
+    { id: 9, src: "/images/mom/mom-art-09.jpg", title: "작품 09" },
+    { id: 10, src: "/images/mom/mom-art-10.jpg", title: "작품 10" },
+    { id: 11, src: "/images/mom/mom-art-11.jpg", title: "작품 11" },
+    { id: 12, src: "/images/mom/mom-art-12.jpg", title: "작품 12" },
+    { id: 13, src: "/images/mom/mom-art-13.jpg", title: "작품 13" },
+    { id: 14, src: "/images/mom/mom-art-14.jpg", title: "작품 14" },
 ];
 
 export default function MomPage() {

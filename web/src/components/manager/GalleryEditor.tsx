@@ -68,7 +68,7 @@ interface UploadPreview {
 }
 
 export function GalleryEditor() {
-    const { data, addImage, removeImage, getImagesByCategory, reorderImages } = useGalleryStore();
+    const { addImage, removeImage, getImagesByCategory, reorderImages, fetchImages, isLoading, images } = useGalleryStore();
     const [selectedCategory, setSelectedCategory] = useState<GalleryCategory>('nakibong-kimphilja');
     const [showUploadForm, setShowUploadForm] = useState(false);
     const [uploadPreviews, setUploadPreviews] = useState<UploadPreview[]>([]);
@@ -86,10 +86,15 @@ export function GalleryEditor() {
     const categoryImages = getImagesByCategory(selectedCategory);
     const selectedCategoryInfo = GALLERY_CATEGORIES.find(c => c.id === selectedCategory);
 
-    // 저장소 용량 업데이트
+    // Firebase에서 이미지 로드
+    useEffect(() => {
+        fetchImages();
+    }, [fetchImages]);
+
+    // 저장소 용량 업데이트 (Firebase에서는 불필요하지만 UI 유지)
     useEffect(() => {
         setStorageUsage(getStorageUsage());
-    }, [data]);
+    }, [images]);
 
     // 이미지 드래그 앤 드롭 핸들러
     const handleImageDragStart = (index: number) => {
@@ -209,31 +214,19 @@ export function GalleryEditor() {
             );
 
             try {
-                // 이미지 압축
-                const compressedDataUrl = await compressImage(preview.file);
+                // Firebase Storage에 업로드 (addImage가 파일 처리)
+                await addImage({
+                    category: selectedCategory,
+                    src: '', // Firebase Storage에서 URL이 생성됨
+                    title: preview.title || undefined,
+                    order: categoryImages.length + i,
+                }, preview.file);
 
-                // 스토어에 추가 (try-catch로 용량 초과 감지)
-                try {
-                    addImage({
-                        category: selectedCategory,
-                        src: compressedDataUrl,
-                        title: preview.title || undefined,
-                        order: categoryImages.length + i,
-                    });
-
-                    // 상태 업데이트: 완료
-                    setUploadPreviews(prev =>
-                        prev.map(p => p.id === preview.id ? { ...p, status: 'done' } : p)
-                    );
-                    successCount++;
-                } catch (storageError) {
-                    // 용량 초과 에러
-                    if (storageError instanceof Error && storageError.message.includes('quota')) {
-                        failedDueToQuota = true;
-                        setErrorMessage('저장소 용량이 가득 찼습니다! 기존 이미지를 삭제하거나 Site Settings에서 데이터를 초기화해주세요.');
-                    }
-                    throw storageError;
-                }
+                // 상태 업데이트: 완료
+                setUploadPreviews(prev =>
+                    prev.map(p => p.id === preview.id ? { ...p, status: 'done' } : p)
+                );
+                successCount++;
             } catch (error) {
                 console.error('Image upload failed:', error);
                 setUploadPreviews(prev =>

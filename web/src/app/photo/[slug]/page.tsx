@@ -1,9 +1,6 @@
-'use client';
-
 import { ContentLayout } from "@/components/layout/content-layout";
 import { PhotoGallery } from "@/components/gallery/PhotoGallery";
 import { GalleryCategory } from "@/types/gallery";
-import { useParams } from "next/navigation";
 import { Camera } from "lucide-react";
 
 // Define the data for each gallery page
@@ -58,9 +55,19 @@ const GALLERY_DATA: Record<string, {
     },
 };
 
-export default function PhotoPage() {
-    const params = useParams();
-    const slug = params.slug as string;
+// Generate static params for all photo pages
+export async function generateStaticParams() {
+    return Object.keys(GALLERY_DATA).map((slug) => ({
+        slug,
+    }));
+}
+
+type Props = {
+    params: Promise<{ slug: string }>;
+};
+
+export default async function PhotoPage({ params }: Props) {
+    const { slug } = await params;
     const data = GALLERY_DATA[slug];
 
     if (!data) {
