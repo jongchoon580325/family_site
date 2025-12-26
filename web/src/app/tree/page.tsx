@@ -12,9 +12,10 @@ export default function TreePage() {
     return (
         <ContentLayout
             title={
-                <span className="flex items-center justify-center gap-3">
+                <span className="flex flex-col md:flex-row items-center justify-center gap-1 md:gap-3">
                     <TreeDeciduous className="w-8 h-8 md:w-10 md:h-10 opacity-80" />
-                    우리집 가계도(Family Tree)
+                    <span>우리집 가계도</span>
+                    <span className="text-lg md:text-4xl font-normal md:font-bold">(Family Tree)</span>
                 </span>
             }
             description="창조주 하나님을 섬기는 우리 가족 현황입니다."

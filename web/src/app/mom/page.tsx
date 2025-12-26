@@ -46,8 +46,8 @@ export default function MomPage() {
     return (
         <ContentLayout
             title={
-                <span className="flex items-center justify-center gap-3">
-                    <Music className="w-8 h-8 md:w-10 md:h-10 opacity-80" />
+                <span className="flex items-center justify-center gap-3 text-2xl md:text-5xl">
+                    <Music className="w-6 h-6 md:w-10 md:h-10 opacity-80" />
                     찬송의 능력으로 이기셨습니다.
                 </span>
             }

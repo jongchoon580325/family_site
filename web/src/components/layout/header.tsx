@@ -35,6 +35,15 @@ export function Header() {
     const [isOpen, setIsOpen] = React.useState(false);
     const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
     const [showLoginModal, setShowLoginModal] = React.useState(false);
+    const [expandedMobile, setExpandedMobile] = React.useState<string[]>([]);
+
+    const toggleMobileSub = (name: string) => {
+        setExpandedMobile(prev =>
+            prev.includes(name)
+                ? prev.filter(n => n !== name)
+                : [...prev, name]
+        );
+    };
 
     const pathname = usePathname();
     const router = useRouter();
@@ -158,38 +167,68 @@ export function Header() {
                         className="overflow-hidden bg-background md:hidden border-b border-secondary/10"
                     >
                         <nav className="flex flex-col p-4 space-y-2">
-                            {NAV_ITEMS.map((item) => (
-                                <div key={item.name}>
-                                    <Link
-                                        href={item.href}
-                                        onClick={(e) => handleNavClick(e, item.href)}
-                                        className={cn(
-                                            "block rounded-lg px-4 py-3 text-lg font-medium transition-colors hover:bg-secondary/5 hover:text-primary",
+                            {NAV_ITEMS.map((item) => {
+                                const isExpanded = expandedMobile.includes(item.name);
+                                const hasSub = !!item.subItems;
+
+                                return (
+                                    <div key={item.name}>
+                                        <div className={cn(
+                                            "flex items-center justify-between rounded-lg transition-colors hover:bg-secondary/5",
                                             pathname === item.href ? "bg-secondary/5 text-primary" : "text-foreground"
-                                        )}
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            {item.name}
-                                            {item.subItems && <ChevronDown className="h-5 w-5 opacity-50" />}
-                                        </div>
-                                    </Link>
-                                    {/* Mobile Subitems */}
-                                    {item.subItems && (
-                                        <div className="ml-4 mt-2 space-y-1 border-l-2 border-secondary/10 pl-4">
-                                            {item.subItems.map(sub => (
-                                                <Link
-                                                    key={sub.name}
-                                                    href={sub.href}
-                                                    className="block rounded-lg px-4 py-3 text-base text-secondary hover:text-primary"
-                                                    onClick={() => setIsOpen(false)}
+                                        )}>
+                                            <Link
+                                                href={item.href}
+                                                onClick={(e) => handleNavClick(e, item.href)}
+                                                className="flex-1 px-4 py-3 text-lg font-medium"
+                                            >
+                                                {item.name}
+                                            </Link>
+                                            {hasSub && (
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        toggleMobileSub(item.name);
+                                                    }}
+                                                    className="px-4 py-3 text-secondary hover:text-primary transition-colors"
                                                 >
-                                                    {sub.name}
-                                                </Link>
-                                            ))}
+                                                    <ChevronDown className={cn(
+                                                        "h-5 w-5 transition-transform duration-200",
+                                                        isExpanded && "rotate-180"
+                                                    )} />
+                                                </button>
+                                            )}
                                         </div>
-                                    )}
-                                </div>
-                            ))}
+
+                                        {/* Mobile Subitems */}
+                                        <AnimatePresence>
+                                            {hasSub && isExpanded && (
+                                                <motion.div
+                                                    initial={{ height: 0, opacity: 0 }}
+                                                    animate={{ height: "auto", opacity: 1 }}
+                                                    exit={{ height: 0, opacity: 0 }}
+                                                    transition={{ duration: 0.2 }}
+                                                    className="overflow-hidden"
+                                                >
+                                                    <div className="ml-4 mt-1 space-y-1 border-l-2 border-secondary/10 pl-4 py-2">
+                                                        {item.subItems!.map(sub => (
+                                                            <Link
+                                                                key={sub.name}
+                                                                href={sub.href}
+                                                                className="block rounded-lg px-4 py-3 text-base text-secondary hover:text-primary hover:bg-secondary/5 transition-colors"
+                                                                onClick={() => setIsOpen(false)}
+                                                            >
+                                                                {sub.name}
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+                                );
+                            })}
                         </nav>
                     </motion.div>
                 )}

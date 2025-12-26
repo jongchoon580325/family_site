@@ -1,5 +1,11 @@
 # Project Commit History
 
+13\.
+
+- **Date**: 2025-12-26 20:10:00
+- **Commit Hash**: `To be updated`
+- **Summary**: UI 최종 개선 - Tree 페이지 모바일 타이틀 2단 분리 및 영문명 스타일 분리기, Mom 페이지 모바일 타이틀 폰트 최적화, 모바일 메뉴(Photo) 기본 닫힘 및 토글 로직 구현.
+
 12\.
 
 - **Date**: 2025-12-26 20:00:00
