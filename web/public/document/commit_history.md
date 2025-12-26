@@ -1,5 +1,11 @@
 # Project Commit History
 
+10\.
+
+- **Date**: 2025-12-26 19:00:00
+- **Commit Hash**: `To be updated`
+- **Summary**: UI 기능 개선 - 모든 페이지(Landing, Tree, Story, Donates, Manager)에 "위로가기(Scroll To Top)" 버튼 적용 및 중복 코드 통합 관리.
+
 9\.
 
 - **Date**: 2025-12-26 18:15:00
