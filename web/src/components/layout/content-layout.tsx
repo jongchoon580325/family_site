@@ -32,12 +32,12 @@ export function ContentLayout({
             </div>
 
             {/* Title & Description Section */}
-            <div className="container mx-auto px-4 py-12 text-center">
+            <div className="container mx-auto px-4 py-6 md:py-12 text-center">
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="font-gowun text-4xl md:text-5xl font-bold text-foreground mb-4"
+                    className="font-gowun text-3xl md:text-5xl font-bold text-foreground mb-4"
                 >
                     {title}
                 </motion.h1>
@@ -47,7 +47,7 @@ export function ContentLayout({
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-                        className="font-gowun text-lg md:text-xl text-secondary max-w-2xl mx-auto"
+                        className="font-gowun text-base md:text-xl text-secondary max-w-2xl mx-auto"
                     >
                         {description}
                     </motion.p>
@@ -55,7 +55,7 @@ export function ContentLayout({
             </div>
 
             {/* Main Content */}
-            <div className="container mx-auto px-4 py-16">
+            <div className="container mx-auto px-4 py-6 md:py-16">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}

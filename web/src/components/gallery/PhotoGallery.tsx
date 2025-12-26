@@ -295,9 +295,9 @@ export function PhotoGallery({ category, title, description }: PhotoGalleryProps
                 <div className="absolute bottom-6 left-6 w-8 h-8 border-b-2 border-l-2 border-amber-500/50 rounded-bl-lg" />
                 <div className="absolute bottom-6 right-6 w-8 h-8 border-b-2 border-r-2 border-amber-500/50 rounded-br-lg" />
 
-                <div className="p-8 md:p-12 relative">
+                <div className="p-6 md:p-12 relative">
                     {/* 섹션 헤더 */}
-                    <div className="text-center mb-8">
+                    <div className="text-center mb-4 md:mb-8">
                         <h2 className="font-serif text-2xl md:text-3xl font-bold text-amber-800 mb-2">
                             {title}
                         </h2>
