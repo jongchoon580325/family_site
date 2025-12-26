@@ -6,6 +6,9 @@ import { usePathname } from "next/navigation";
 import { TreeDeciduous, Menu, X, ChevronDown, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { AdminLoginModal } from "@/components/auth/AdminLoginModal";
+import { useAuthStore } from "@/store/auth-store";
 
 const NAV_ITEMS = [
     { name: "HOME", href: "/" },
@@ -31,13 +34,32 @@ const NAV_ITEMS = [
 export function Header() {
     const [isOpen, setIsOpen] = React.useState(false);
     const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
+    const [showLoginModal, setShowLoginModal] = React.useState(false);
+
     const pathname = usePathname();
+    const router = useRouter();
+    const { isAuthenticated } = useAuthStore();
 
     const handleLogoClick = (e: React.MouseEvent) => {
         if (pathname === "/") {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+    };
+
+    const handleNavClick = (e: React.MouseEvent, href: string) => {
+        if (href === "/manager" && !isAuthenticated) {
+            e.preventDefault();
+            setShowLoginModal(true);
+            setIsOpen(false);
+            return;
+        }
+        setIsOpen(false);
+    };
+
+    const handleLoginSuccess = () => {
+        setShowLoginModal(false);
+        router.push("/manager");
     };
 
     return (
@@ -65,6 +87,7 @@ export function Header() {
                             <div key={item.name} className="relative group/menu">
                                 <Link
                                     href={item.href}
+                                    onClick={(e) => handleNavClick(e, item.href)}
                                     className={cn(
                                         "relative px-4 py-2 text-lg transition-colors duration-200", // Increased to 18px (text-lg)
                                         isActive ? "text-primary font-medium" : "text-secondary hover:text-primary font-normal hover:font-medium"
@@ -139,11 +162,11 @@ export function Header() {
                                 <div key={item.name}>
                                     <Link
                                         href={item.href}
+                                        onClick={(e) => handleNavClick(e, item.href)}
                                         className={cn(
                                             "block rounded-lg px-4 py-3 text-lg font-medium transition-colors hover:bg-secondary/5 hover:text-primary",
                                             pathname === item.href ? "bg-secondary/5 text-primary" : "text-foreground"
                                         )}
-                                        onClick={() => setIsOpen(false)}
                                     >
                                         <div className="flex items-center justify-between">
                                             {item.name}
@@ -171,6 +194,11 @@ export function Header() {
                     </motion.div>
                 )}
             </AnimatePresence>
+            <AdminLoginModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+                onLoginSuccess={handleLoginSuccess}
+            />
         </header>
     );
 }

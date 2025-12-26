@@ -10,6 +10,10 @@ import { FamilyTreeEditor } from "@/components/manager/FamilyTreeEditor";
 import { GalleryEditor } from "@/components/manager/GalleryEditor";
 import { storage } from "@/lib/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/auth-store";
+import { AdminPasswordSection } from "@/components/manager/AdminPasswordSection";
+import { DataBackupSection } from "@/components/manager/DataBackupSection";
 
 type MenuSection = 'story-upload' | 'site-settings' | 'family-tree' | 'gallery';
 
@@ -156,6 +160,16 @@ export default function ManagerPage() {
     const [activeSection, setActiveSection] = useState<MenuSection>('story-upload');
     const [showResetConfirm, setShowResetConfirm] = useState(false);
 
+    // Auth Protection
+    const router = useRouter();
+    const { isAuthenticated } = useAuthStore();
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            router.push('/');
+        }
+    }, [isAuthenticated, router]);
+
     const handleResetConfirm = () => {
         // Firebase를 사용하므로 localStorage 초기화 불필요
         // 개별 삭제 기능으로 대체
@@ -261,18 +275,20 @@ export default function ManagerPage() {
                                 transition={{ duration: 0.2 }}
                                 className="space-y-8"
                             >
+                                <AdminPasswordSection />
+                                <DataBackupSection />
+
                                 <div className="p-6 bg-red-50 rounded-xl border border-red-100">
                                     <h3 className="text-lg font-bold text-red-800 mb-2">Danger Zone</h3>
                                     <p className="text-sm text-red-600 mb-4">
-                                        If you are experiencing issues with data saving or errors, you can reset all story data to the initial state.
-                                        This will delete all custom uploaded stories.
+                                        문제가 발생했을 때 데이터를 초기화할 수 있습니다. (주의: 되돌릴 수 없습니다.)
                                     </p>
                                     <button
                                         type="button"
                                         onClick={() => setShowResetConfirm(true)}
                                         className="px-4 py-2 bg-white border border-red-200 text-red-600 rounded-lg hover:bg-red-600 hover:text-white transition-colors text-sm font-medium"
                                     >
-                                        Reset All Data
+                                        초기화 (Reset All Data)
                                     </button>
                                 </div>
                             </motion.div>

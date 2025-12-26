@@ -25,11 +25,6 @@ const gowunDodum = Gowun_Dodum({
 export const metadata: Metadata = {
   title: "우리가족 이야기",
   description: "가족의 역사와 추억을 간직하는 공간",
-  icons: {
-    icon: "/images/common/favicon.png",
-    shortcut: "/images/common/favicon.png",
-    apple: "/images/common/favicon.png", // Optional: for apple touch icon
-  },
 };
 
 export default function RootLayout({

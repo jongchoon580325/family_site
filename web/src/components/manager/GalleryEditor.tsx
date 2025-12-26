@@ -16,20 +16,10 @@ import {
     Loader2
 } from 'lucide-react';
 
-// localStorage 용량 체크 유틸
-const getStorageUsage = (): { used: number; total: number; percentage: number } => {
-    let used = 0;
-    for (const key in localStorage) {
-        if (localStorage.hasOwnProperty(key)) {
-            used += localStorage[key].length * 2; // UTF-16 = 2 bytes per char
-        }
-    }
-    const total = 5 * 1024 * 1024; // 약 5MB (브라우저별 다름)
-    return { used, total, percentage: Math.round((used / total) * 100) };
-};
+// LocalStorage 용량 체크 유틸 제거됨 (Firebase Storage 사용)
 
-// 이미지 압축 유틸 함수 (강력한 압축 적용)
-const compressImage = (file: File, maxWidth: number = 600): Promise<string> => {
+// 이미지 압축 유틸 함수 (PC 화질 저하 방지를 위해 1200px, 0.8 설정)
+const compressImage = (file: File, maxWidth: number = 1200): Promise<File> => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -38,9 +28,14 @@ const compressImage = (file: File, maxWidth: number = 600): Promise<string> => {
             img.src = event.target?.result as string;
             img.onload = () => {
                 const canvas = document.createElement('canvas');
-                const scaleSize = maxWidth / img.width;
-                const width = img.width > maxWidth ? maxWidth : img.width;
-                const height = img.width > maxWidth ? img.height * scaleSize : img.height;
+                let width = img.width;
+                let height = img.height;
+
+                // 비율 유지하며 리사이징
+                if (width > maxWidth) {
+                    height = (height * maxWidth) / width;
+                    width = maxWidth;
+                }
 
                 canvas.width = width;
                 canvas.height = height;
@@ -48,9 +43,18 @@ const compressImage = (file: File, maxWidth: number = 600): Promise<string> => {
                 const ctx = canvas.getContext('2d');
                 ctx?.drawImage(img, 0, 0, width, height);
 
-                // JPEG 0.5 quality로 강력 압축 (용량 절약)
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.5);
-                resolve(dataUrl);
+                // JPEG 0.8 quality로 압축 (화질/용량 균형)
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        const compressedFile = new File([blob], file.name, {
+                            type: 'image/jpeg',
+                            lastModified: Date.now(),
+                        });
+                        resolve(compressedFile);
+                    } else {
+                        reject(new Error('Canvas to Blob conversion failed'));
+                    }
+                }, 'image/jpeg', 0.8);
             };
             img.onerror = (error) => reject(error);
         };
@@ -75,7 +79,7 @@ export function GalleryEditor() {
     const [isDragging, setIsDragging] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
-    const [storageUsage, setStorageUsage] = useState({ used: 0, total: 5 * 1024 * 1024, percentage: 0 });
+    // const [storageUsage, setStorageUsage] = useState({ used: 0, total: 5 * 1024 * 1024, percentage: 0 }); // 제거됨
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -90,11 +94,6 @@ export function GalleryEditor() {
     useEffect(() => {
         fetchImages();
     }, [fetchImages]);
-
-    // 저장소 용량 업데이트 (Firebase에서는 불필요하지만 UI 유지)
-    useEffect(() => {
-        setStorageUsage(getStorageUsage());
-    }, [images]);
 
     // 이미지 드래그 앤 드롭 핸들러
     const handleImageDragStart = (index: number) => {
@@ -195,18 +194,10 @@ export function GalleryEditor() {
         setErrorMessage(null);
 
         let successCount = 0;
-        let failedDueToQuota = false;
+        let failedDueToQuota = false; // Note: This flag might be redundant without quota check but kept for structure
 
         for (let i = 0; i < uploadPreviews.length; i++) {
             const preview = uploadPreviews[i];
-
-            // 이미 용량 초과된 경우 남은 파일 스킵
-            if (failedDueToQuota) {
-                setUploadPreviews(prev =>
-                    prev.map(p => p.id === preview.id ? { ...p, status: 'error' } : p)
-                );
-                continue;
-            }
 
             // 상태 업데이트: 처리 중
             setUploadPreviews(prev =>
@@ -214,13 +205,16 @@ export function GalleryEditor() {
             );
 
             try {
+                // 압축 수행
+                const compressedFile = await compressImage(preview.file);
+
                 // Firebase Storage에 업로드 (addImage가 파일 처리)
                 await addImage({
                     category: selectedCategory,
                     src: '', // Firebase Storage에서 URL이 생성됨
                     title: preview.title || undefined,
                     order: categoryImages.length + i,
-                }, preview.file);
+                }, compressedFile);
 
                 // 상태 업데이트: 완료
                 setUploadPreviews(prev =>
@@ -236,7 +230,8 @@ export function GalleryEditor() {
         }
 
         setIsProcessing(false);
-        setStorageUsage(getStorageUsage());
+        setIsProcessing(false);
+        // setStorageUsage(getStorageUsage()); // 제거됨
 
         if (successCount > 0) {
             // 성공한 항목 정리 (1초 후)
@@ -273,25 +268,15 @@ export function GalleryEditor() {
                 </div>
             </div>
 
-            {/* Storage Usage Indicator */}
-            <div className="bg-stone-50 rounded-lg p-3 border border-stone-200">
-                <div className="flex items-center justify-between text-sm mb-2">
-                    <span className="text-stone-600">저장소 사용량</span>
-                    <span className={`font-medium ${storageUsage.percentage > 80 ? 'text-red-600' : 'text-stone-700'}`}>
-                        {(storageUsage.used / (1024 * 1024)).toFixed(2)} MB / {(storageUsage.total / (1024 * 1024)).toFixed(0)} MB ({storageUsage.percentage}%)
-                    </span>
+            {/* Storage Usage Indicator - Replaced with Cloud Badge */}
+            <div className="bg-sky-50 rounded-lg p-4 border border-sky-100 flex items-center gap-3">
+                <div className="p-2 bg-sky-100 rounded-full">
+                    <Images className="w-5 h-5 text-sky-600" />
                 </div>
-                <div className="w-full bg-stone-200 rounded-full h-2">
-                    <div
-                        className={`h-2 rounded-full transition-all ${storageUsage.percentage > 80 ? 'bg-red-500' :
-                            storageUsage.percentage > 60 ? 'bg-amber-500' : 'bg-green-500'
-                            }`}
-                        style={{ width: `${Math.min(storageUsage.percentage, 100)}%` }}
-                    />
+                <div>
+                    <h4 className="text-sm font-semibold text-sky-900">Cloud Storage 사용 중</h4>
+                    <p className="text-xs text-sky-700 mt-0.5">Firebase Storage를 사용하여 대용량 이미지를 안전하게 저장합니다.</p>
                 </div>
-                {storageUsage.percentage > 80 && (
-                    <p className="text-xs text-red-600 mt-2">⚠️ 저장소가 거의 가득 찼습니다! 기존 이미지를 삭제해주세요.</p>
-                )}
             </div>
 
             {/* Error Message */}
