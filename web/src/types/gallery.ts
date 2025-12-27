@@ -29,11 +29,11 @@ export interface CategoryInfo {
  */
 export const GALLERY_CATEGORIES: CategoryInfo[] = [
     { id: 'nakibong-kimphilja', nameKo: '나기봉.김필자', nameEn: 'Na Gi-bong & Kim Phil-ja', path: '/photo/nakibong-kimphilja' },
-    { id: 'najongchoon-jangmyungaei', nameKo: '나종춘.장명애', nameEn: 'Na Jong-choon & Jang Myeong-aei', path: '/photo/najongchoon-jangmyungaei' },
-    { id: 'najongseop-kimyangjin', nameKo: '나종섭.김양진', nameEn: 'Na Jong-seop & Kim Yang-jin', path: '/photo/najongseop-kimyangjin' },
-    { id: 'nashinsuk-kimjinsu', nameKo: '나신숙.김진수', nameEn: 'Na Shin-suk & Kim Jin-su', path: '/photo/nashinsuk-kimjinsu' },
-    { id: 'nahanna-jungkiwon', nameKo: '나한나.정기원', nameEn: 'Na Han-na & Jung Gi-won', path: '/photo/nahanna-jungkiwon' },
-    { id: 'nayohan-hyungjungsoon', nameKo: '나요한.형정순', nameEn: 'Na Yo-han & Hyeong Jeong-soon', path: '/photo/nayohan-hyungjungsoon' },
+    { id: 'najongchoon-jangmyungaei', nameKo: '나종춘.장명애', nameEn: 'Na Jong-choon & Jang Myeong-aei', path: '/photo/najongchoon-jangmyeongae' },
+    { id: 'najongseop-kimyangjin', nameKo: '나종섭.김양진', nameEn: 'Na Jong-seop & Kim Yang-jin', path: '/photo/najongseob-kimyangjin' },
+    { id: 'nashinsuk-kimjinsu', nameKo: '나신숙.김진수', nameEn: 'Na Shin-suk & Kim Jin-su', path: '/photo/nashinsook-kimjinsu' },
+    { id: 'nahanna-jungkiwon', nameKo: '나한나.정기원', nameEn: 'Na Han-na & Jung Gi-won', path: '/photo/nahanna-jeongkiwon' },
+    { id: 'nayohan-hyungjungsoon', nameKo: '나요한.형정순', nameEn: 'Na Yo-han & Hyeong Jeong-soon', path: '/photo/nayohan-hyeongjeongsun' },
 ];
 
 /**
