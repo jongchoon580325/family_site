@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { ScrollToTop } from "@/components/layout/scroll-to-top";
+import { VersionChecker } from "@/components/common/VersionChecker";
 
 const notoSansKr = Noto_Sans_KR({
   variable: "--font-noto-sans-kr",
@@ -43,7 +44,9 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <Footer />
         <ScrollToTop />
+        <VersionChecker />
       </body>
     </html>
   );

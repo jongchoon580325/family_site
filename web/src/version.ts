@@ -1,0 +1,2 @@
+export const APP_VERSION = "1766796359648";
+export const BUILD_DATE = "2025-12-27T00:45:59.648Z";
