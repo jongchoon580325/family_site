@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/footer";
 import { ScrollToTop } from "@/components/layout/scroll-to-top";
 import { VersionChecker } from "@/components/common/VersionChecker";
 import MouseTrailer from "@/components/common/MouseTrailer";
+import { PopupModal } from "@/components/common/PopupModal";
 
 const notoSansKr = Noto_Sans_KR({
   variable: "--font-noto-sans-kr",
@@ -48,6 +49,7 @@ export default function RootLayout({
         <ScrollToTop />
         <VersionChecker />
         <MouseTrailer />
+        <PopupModal />
       </body>
     </html>
   );

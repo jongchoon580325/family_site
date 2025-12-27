@@ -15,6 +15,7 @@ import { useAuthStore } from "@/store/auth-store";
 import { AdminPasswordSection } from "@/components/manager/AdminPasswordSection";
 import { DataBackupSection } from "@/components/manager/DataBackupSection";
 import { MouseControlSection } from "@/components/manager/MouseControlSection";
+import { PopupControlSection } from "@/components/manager/PopupControlSection";
 
 type MenuSection = 'story-upload' | 'site-settings' | 'family-tree' | 'gallery';
 
@@ -276,6 +277,7 @@ export default function ManagerPage() {
                                 transition={{ duration: 0.2 }}
                                 className="space-y-8"
                             >
+                                <PopupControlSection />
                                 <MouseControlSection />
                                 <AdminPasswordSection />
                                 <DataBackupSection />

@@ -2,20 +2,48 @@ import { create } from 'zustand';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 
+export interface PopupSettings {
+    isActive: boolean;
+    title: string;
+    content: string;
+    imageUrl?: string;
+    linkUrl?: string;
+    id: string; // Unique ID to track "Don't show today"
+    startDate?: string; // YYYY-MM-DD
+    endDate?: string;   // YYYY-MM-DD
+}
+
 interface SettingsState {
     mouseTrailText: string;
     isMouseTrailEnabled: boolean;
+
+    popupSettings: PopupSettings;
+
     isLoading: boolean;
 
     // Actions
     fetchSettings: () => Promise<void>;
-    updateSettings: (settings: Partial<{ mouseTrailText: string; isMouseTrailEnabled: boolean }>) => Promise<void>;
+    updateSettings: (settings: Partial<{
+        mouseTrailText: string;
+        isMouseTrailEnabled: boolean;
+        popupSettings: PopupSettings;
+    }>) => Promise<void>;
     subscribeToSettings: () => () => void; // Returns unsubscribe function
 }
+
+const DEFAULT_POPUP: PopupSettings = {
+    isActive: false,
+    title: "",
+    content: "",
+    id: Date.now().toString(),
+    startDate: "",
+    endDate: ""
+};
 
 export const useSettingsStore = create<SettingsState>((set, get) => ({
     mouseTrailText: "♥",
     isMouseTrailEnabled: false,
+    popupSettings: DEFAULT_POPUP,
     isLoading: true,
 
     fetchSettings: async () => {
@@ -29,13 +57,15 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
                 set({
                     mouseTrailText: data.mouseTrailText || "♥",
                     isMouseTrailEnabled: data.isMouseTrailEnabled || false,
+                    popupSettings: data.popupSettings || DEFAULT_POPUP,
                     isLoading: false
                 });
             } else {
                 // Initialize default if not exists
                 await setDoc(docRef, {
                     mouseTrailText: "♥",
-                    isMouseTrailEnabled: false
+                    isMouseTrailEnabled: false,
+                    popupSettings: DEFAULT_POPUP
                 });
                 set({ isLoading: false });
             }
@@ -65,7 +95,8 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
                 const data = doc.data();
                 set({
                     mouseTrailText: data.mouseTrailText || "♥",
-                    isMouseTrailEnabled: data.isMouseTrailEnabled || false
+                    isMouseTrailEnabled: data.isMouseTrailEnabled || false,
+                    popupSettings: data.popupSettings || DEFAULT_POPUP
                 });
             }
         });
