@@ -3,7 +3,7 @@
 18\.
 
 - **Date**: 2025-12-27 09:40:00
-- **Commit Hash**: `To be updated`
+- **Commit Hash**: `940751d`
 - **Summary**: Tree 페이지 "가족 명단" 디자인 개선 - 세대별(1세대: Amber, 2세대: Sky, 3세대: Rose)로 파스텔톤 컬러 테마를 적용하여 시각적 구분을 명확히 함.
 
 17\.
