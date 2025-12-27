@@ -420,6 +420,12 @@ export function GalleryEditor() {
                                                 type="text"
                                                 value={preview.title}
                                                 onChange={(e) => updatePreviewTitle(preview.id, e.target.value)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') {
+                                                        e.preventDefault();
+                                                        handleUploadAll();
+                                                    }
+                                                }}
                                                 placeholder="제목 입력"
                                                 disabled={preview.status !== 'pending'}
                                                 className="flex-1 px-2 py-1 text-sm border border-stone-200 rounded focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:bg-stone-100"
