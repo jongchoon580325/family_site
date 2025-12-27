@@ -3,7 +3,7 @@
 21\.
 
 - **Date**: 2025-12-27 10:10:00
-- **Commit Hash**: `To be updated`
+- **Commit Hash**: `cc89eed`
 - **Summary**: 버그 수정 - PC와 모바일 브라우저 환경에서 하단 푸터(Footer) 영역이 이중으로 중첩되어 표시되던 렌더링 오류 수정.
 
 20\.
