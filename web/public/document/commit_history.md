@@ -3,7 +3,7 @@
 26\.
 
 - **Date**: 2025-12-27 12:20:00
-- **Commit Hash**: `To be updated`
+- **Commit Hash**: `e1f72d6`
 - **Summary**: 사용자 경험(UX) 고도화 - **404 페이지(Page Not Found)** 커스텀 디자인 및 검색 기능 연동. 헤더의 검색 모달 제어 권한을 전역 상태관리(Zustand)로 이관하여, 404 페이지에서도 "원하는 내용 검색하기" 버튼 클릭 시 즉시 통합 검색(Global Search)이 실행되도록 구현.
 
 25\.
