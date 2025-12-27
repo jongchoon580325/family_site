@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { AdminLoginModal } from "@/components/auth/AdminLoginModal";
 import { SearchModal } from "@/components/common/SearchModal";
 import { useAuthStore } from "@/store/auth-store";
+import { useUIStore } from "@/store/ui-store";
+
 
 const NAV_ITEMS = [
     { name: "HOME", href: "/" },
@@ -36,7 +38,10 @@ export function Header() {
     const [isOpen, setIsOpen] = React.useState(false);
     const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
     const [showLoginModal, setShowLoginModal] = React.useState(false);
-    const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+
+    // Global UI State
+    const { isSearchOpen, setSearchOpen } = useUIStore();
+
     const [expandedMobile, setExpandedMobile] = React.useState<string[]>([]);
 
     const toggleMobileSub = (name: string) => {
@@ -146,7 +151,7 @@ export function Header() {
                 {/* Utilities */}
                 <div className="hidden items-center gap-4 md:flex">
                     <button
-                        onClick={() => setIsSearchOpen(true)}
+                        onClick={() => setSearchOpen(true)}
                         className="flex h-10 w-10 items-center justify-center rounded-full text-secondary hover:bg-secondary/10 transition-colors"
                         aria-label="Search"
                     >
@@ -246,7 +251,7 @@ export function Header() {
             />
             <SearchModal
                 isOpen={isSearchOpen}
-                onClose={() => setIsSearchOpen(false)}
+                onClose={() => setSearchOpen(false)}
             />
         </header>
     );
