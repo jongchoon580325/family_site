@@ -6,25 +6,72 @@ import { useFamilyTreeStore } from "@/store/family-tree-store";
 import { TreeDeciduous, Globe } from "lucide-react";
 import { motion } from "framer-motion";
 
-function FamilyListCard({ parents, children, color = "stone" }: { parents: string[], children: string[], color?: "amber" | "stone" }) {
-    const isAmber = color === "amber";
+function FamilyListCard({ parents, children, color = "stone" }: { parents: string[], children: string[], color?: "amber" | "sky" | "rose" | "stone" }) {
+    const colorStyles = {
+        amber: {
+            bg: "bg-amber-50/50",
+            border: "border-amber-200",
+            textHeader: "text-amber-900",
+            textBody: "text-amber-800",
+            subHeader: "text-amber-600",
+            icon: "👑",
+            deco: "bg-amber-100/50",
+            dot: "bg-amber-400",
+            tag: "bg-amber-100/50 text-amber-900"
+        },
+        sky: {
+            bg: "bg-sky-50/50",
+            border: "border-sky-200",
+            textHeader: "text-sky-900",
+            textBody: "text-sky-800",
+            subHeader: "text-sky-600",
+            icon: "🌳",
+            deco: "bg-sky-100/50",
+            dot: "bg-sky-400",
+            tag: "bg-sky-100/50 text-sky-900"
+        },
+        rose: {
+            bg: "bg-rose-50/50",
+            border: "border-rose-200",
+            textHeader: "text-rose-900",
+            textBody: "text-rose-800",
+            subHeader: "text-rose-600",
+            icon: "🌱",
+            deco: "bg-rose-100/50",
+            dot: "bg-rose-400",
+            tag: "bg-rose-100/50 text-rose-900"
+        },
+        stone: {
+            bg: "bg-white",
+            border: "border-stone-200",
+            textHeader: "text-stone-800",
+            textBody: "text-stone-700",
+            subHeader: "text-stone-400",
+            icon: "👨‍👩‍👧‍👦",
+            deco: "bg-stone-100/50",
+            dot: "bg-stone-400",
+            tag: "bg-stone-100/50 text-stone-700"
+        }
+    };
+
+    const style = colorStyles[color];
+
     return (
         <motion.div
             whileHover={{ y: -5 }}
-            className={`relative overflow-hidden rounded-2xl border-2 ${isAmber ? 'border-amber-200 bg-amber-50/50' : 'border-stone-200 bg-white'
-                } p-6 shadow-sm hover:shadow-md transition-all duration-300`}
+            className={`relative overflow-hidden rounded-2xl border-2 ${style.border} ${style.bg} p-6 shadow-sm hover:shadow-md transition-all duration-300`}
         >
             {/* Background Decoration */}
-            <div className={`absolute -top-10 -right-10 w-32 h-32 rounded-full ${isAmber ? 'bg-amber-100/50' : 'bg-stone-100/50'} blur-2xl`} />
+            <div className={`absolute -top-10 -right-10 w-32 h-32 rounded-full ${style.deco} blur-2xl`} />
 
             {/* Parents Header */}
-            <div className={`relative pb-4 border-b ${isAmber ? 'border-amber-200' : 'border-stone-100'} mb-4`}>
-                <h3 className={`font-serif text-lg font-bold ${isAmber ? 'text-amber-900' : 'text-stone-800'} mb-3 flex items-center gap-2`}>
-                    {isAmber ? '👑' : '👨‍👩‍👧‍👦'} Parents
+            <div className={`relative pb-4 border-b ${color === 'stone' ? 'border-stone-100' : style.border} mb-4`}>
+                <h3 className={`font-serif text-lg font-bold ${style.textHeader} mb-3 flex items-center gap-2`}>
+                    {style.icon} Parents
                 </h3>
                 <div className="space-y-1">
                     {parents.map((parent, idx) => (
-                        <p key={idx} className={`font-medium ${isAmber ? 'text-amber-800' : 'text-stone-700'}`}>
+                        <p key={idx} className={`font-medium ${style.textBody}`}>
                             {idx === 0 ? 'Father' : 'Mother'} : {parent}
                         </p>
                     ))}
@@ -33,13 +80,13 @@ function FamilyListCard({ parents, children, color = "stone" }: { parents: strin
 
             {/* Children List */}
             <div className="relative">
-                <h4 className={`text-xs font-bold uppercase tracking-wider ${isAmber ? 'text-amber-600' : 'text-stone-400'} mb-3`}>
+                <h4 className={`text-xs font-bold uppercase tracking-wider ${style.subHeader} mb-3`}>
                     Children
                 </h4>
                 <div className="grid grid-cols-2 gap-2">
                     {children.map((child, idx) => (
-                        <div key={idx} className={`flex items-center gap-2 px-3 py-2 rounded-lg ${isAmber ? 'bg-amber-100/50 text-amber-900' : 'bg-stone-100/50 text-stone-700'} text-sm font-medium`}>
-                            <div className={`w-1.5 h-1.5 rounded-full ${isAmber ? 'bg-amber-400' : 'bg-stone-400'}`} />
+                        <div key={idx} className={`flex items-center gap-2 px-3 py-2 rounded-lg ${style.tag} text-sm font-medium`}>
+                            <div className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
                             {child}
                         </div>
                     ))}
@@ -172,41 +219,41 @@ export default function TreePage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                        {/* 1. Root Family */}
+                        {/* 1. Root Family - Amber */}
                         <FamilyListCard
                             parents={["나기봉 (Na, Ki Bong)", "김필자 (Kim, Phil Ja)"]}
                             children={["나종춘", "나종훈", "나종철", "나종섭", "나신숙"]}
                             color="amber"
                         />
-                        {/* 2. 1st Son Family */}
+                        {/* 2. 1st Son Family - Sky */}
                         <FamilyListCard
                             parents={["나종춘 (Na, Jong Choon)", "장명애 (Jang, Myung Eai)"]}
                             children={["나한나", "나요한"]}
-                            color="stone"
+                            color="sky"
                         />
-                        {/* 3. 3rd Son Family */}
+                        {/* 3. 3rd Son Family - Sky */}
                         <FamilyListCard
                             parents={["나종섭 (Na, Jong Seob)", "김양진 (Kim, Yang Jin)"]}
                             children={["나경찬", "나경훈"]}
-                            color="stone"
+                            color="sky"
                         />
-                        {/* 4. Daughter Family */}
+                        {/* 4. Daughter Family - Sky */}
                         <FamilyListCard
                             parents={["김진수 (Kim, Jin Soo)", "나신숙 (Na, Shin Sook)"]}
                             children={["김시후"]}
-                            color="stone"
+                            color="sky"
                         />
-                        {/* 5. Granddaughter Family */}
+                        {/* 5. Granddaughter Family - Rose */}
                         <FamilyListCard
                             parents={["정기원 (Jung, Ki Won)", "나한나 (Na, Han Na)"]}
                             children={["정하윤"]}
-                            color="stone"
+                            color="rose"
                         />
-                        {/* 6. Grandson Family */}
+                        {/* 6. Grandson Family - Rose */}
                         <FamilyListCard
                             parents={["나요한 (Na, Yo Han)", "형정순 (Hyung, Jung Soon)"]}
                             children={["나서현"]}
-                            color="stone"
+                            color="rose"
                         />
                     </div>
                 </motion.section>
