@@ -206,55 +206,72 @@ export default function TreePage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                     viewport={{ once: true }}
-                    className="mt-16"
+                    className="mt-16 relative"
                 >
-                    <div className="text-center mb-10">
-                        <div className="flex items-center justify-center gap-2 text-amber-700 mb-4">
-                            <span className="text-2xl">❖</span>
-                            <span className="text-sm font-semibold uppercase tracking-wider">Family List</span>
-                        </div>
-                        <h2 className="font-serif text-2xl md:text-3xl font-bold text-amber-900">
-                            {language === 'ko' ? '가족 명단' : 'Family Member List'}
-                        </h2>
-                    </div>
+                    {/* Premium Background with multiple layers - Matches First Section */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-100/80 via-orange-50/60 to-amber-50/80 rounded-3xl -z-10" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.15),transparent_50%)] rounded-3xl -z-10" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(245,158,11,0.1),transparent_50%)] rounded-3xl -z-10" />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                        {/* 1. Root Family - Amber */}
-                        <FamilyListCard
-                            parents={["나기봉 (Na, Ki Bong)", "김필자 (Kim, Phil Ja)"]}
-                            children={["나종춘", "나종훈", "나종철", "나종섭", "나신숙"]}
-                            color="amber"
-                        />
-                        {/* 2. 1st Son Family - Sky */}
-                        <FamilyListCard
-                            parents={["나종춘 (Na, Jong Choon)", "장명애 (Jang, Myung Eai)"]}
-                            children={["나한나", "나요한"]}
-                            color="sky"
-                        />
-                        {/* 3. 3rd Son Family - Sky */}
-                        <FamilyListCard
-                            parents={["나종섭 (Na, Jong Seob)", "김양진 (Kim, Yang Jin)"]}
-                            children={["나경찬", "나경훈"]}
-                            color="sky"
-                        />
-                        {/* 4. Daughter Family - Sky */}
-                        <FamilyListCard
-                            parents={["김진수 (Kim, Jin Soo)", "나신숙 (Na, Shin Sook)"]}
-                            children={["김시후"]}
-                            color="sky"
-                        />
-                        {/* 5. Granddaughter Family - Rose */}
-                        <FamilyListCard
-                            parents={["정기원 (Jung, Ki Won)", "나한나 (Na, Han Na)"]}
-                            children={["정하윤"]}
-                            color="rose"
-                        />
-                        {/* 6. Grandson Family - Rose */}
-                        <FamilyListCard
-                            parents={["나요한 (Na, Yo Han)", "형정순 (Hyung, Jung Soon)"]}
-                            children={["나서현"]}
-                            color="rose"
-                        />
+                    {/* Decorative Border Frame */}
+                    <div className="absolute inset-3 border-2 border-amber-300/40 rounded-2xl pointer-events-none" />
+                    <div className="absolute inset-6 border border-amber-200/30 rounded-xl pointer-events-none" />
+
+                    {/* Corner Ornaments */}
+                    <div className="absolute top-6 left-6 w-8 h-8 border-t-2 border-l-2 border-amber-500/50 rounded-tl-lg" />
+                    <div className="absolute top-6 right-6 w-8 h-8 border-t-2 border-r-2 border-amber-500/50 rounded-tr-lg" />
+                    <div className="absolute bottom-6 left-6 w-8 h-8 border-b-2 border-l-2 border-amber-500/50 rounded-bl-lg" />
+                    <div className="absolute bottom-6 right-6 w-8 h-8 border-b-2 border-r-2 border-amber-500/50 rounded-br-lg" />
+
+                    <div className="p-8 md:p-12 relative">
+                        <div className="text-center mb-10">
+                            <div className="flex items-center justify-center gap-2 text-amber-700 mb-4">
+                                <span className="text-2xl">❖</span>
+                                <span className="text-sm font-semibold uppercase tracking-wider">Family List</span>
+                            </div>
+                            <h2 className="font-serif text-2xl md:text-3xl font-bold text-amber-900">
+                                {language === 'ko' ? '가족 명단' : 'Family Member List'}
+                            </h2>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                            {/* 1. Root Family - Amber */}
+                            <FamilyListCard
+                                parents={["나기봉 (Na, Ki Bong)", "김필자 (Kim, Phil Ja)"]}
+                                children={["나종춘", "나종훈", "나종철", "나종섭", "나신숙"]}
+                                color="amber"
+                            />
+                            {/* 2. 1st Son Family - Sky */}
+                            <FamilyListCard
+                                parents={["나종춘 (Na, Jong Choon)", "장명애 (Jang, Myung Eai)"]}
+                                children={["나한나", "나요한"]}
+                                color="sky"
+                            />
+                            {/* 3. 3rd Son Family - Sky */}
+                            <FamilyListCard
+                                parents={["나종섭 (Na, Jong Seob)", "김양진 (Kim, Yang Jin)"]}
+                                children={["나경찬", "나경훈"]}
+                                color="sky"
+                            />
+                            {/* 4. Daughter Family - Sky */}
+                            <FamilyListCard
+                                parents={["김진수 (Kim, Jin Soo)", "나신숙 (Na, Shin Sook)"]}
+                                children={["김시후"]}
+                                color="sky"
+                            />
+                            {/* 5. Granddaughter Family - Rose */}
+                            <FamilyListCard
+                                parents={["정기원 (Jung, Ki Won)", "나한나 (Na, Han Na)"]}
+                                children={["정하윤"]}
+                                color="rose"
+                            />
+                            {/* 6. Grandson Family - Rose */}
+                            <FamilyListCard
+                                parents={["나요한 (Na, Yo Han)", "형정순 (Hyung, Jung Soon)"]}
+                                children={["나서현"]}
+                                color="rose"
+                            />
+                        </div>
                     </div>
                 </motion.section>
             </div>
