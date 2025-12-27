@@ -44,7 +44,6 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
-        <Footer />
         <ScrollToTop />
         <VersionChecker />
       </body>
