@@ -1,5 +1,17 @@
 # Project Commit History
 
+28\.
+
+- **Date**: 2025-12-27 14:40:00
+- **Commit Hash**: `8ccd489`
+- **Summary**: 기능 개선 - Story 입력 필드에서 YouTube Shorts URL(`youtube.com/shorts/`)도 정상적으로 인식하여 영상 ID를 추출하도록 정규식(Regex) 로직 강화.
+
+27\.
+
+- **Date**: 2025-12-27 14:00:00
+- **Commit Hash**: `93372f0`
+- **Summary**: 랜딩 페이지 UI 수정 - '기적같은 만남' 섹션의 신랑/신부 결혼 기념일 표기 방식을 개선. 동적 연산 로직을 적용하여 현재 연도 기준 주년(예: 제68주년)을 자동 계산 및 표시하고, 가독성을 위해 날짜는 Amber, 주년은 White 컬러로 구분 적용.
+
 26\.
 
 - **Date**: 2025-12-27 12:20:00
