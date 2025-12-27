@@ -480,8 +480,9 @@ function WeddingCardsSection() {
                     </p>
 
                     {/* 결혼일 */}
-                    <p className="text-stone-100 font-medium">
-                      ({card.date}) 제{new Date().getFullYear() - parseInt(card.date.substring(0, 4))}주년
+                    <p className="font-medium">
+                      <span className="text-amber-500">({card.date})</span>
+                      <span className="text-stone-100 ml-1">제{new Date().getFullYear() - parseInt(card.date.substring(0, 4))}주년</span>
                     </p>
 
                     {/* 영문 이름 */}
