@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { AdminLoginModal } from "@/components/auth/AdminLoginModal";
+import { SearchModal } from "@/components/common/SearchModal";
 import { useAuthStore } from "@/store/auth-store";
 
 const NAV_ITEMS = [
@@ -35,6 +36,7 @@ export function Header() {
     const [isOpen, setIsOpen] = React.useState(false);
     const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
     const [showLoginModal, setShowLoginModal] = React.useState(false);
+    const [isSearchOpen, setIsSearchOpen] = React.useState(false);
     const [expandedMobile, setExpandedMobile] = React.useState<string[]>([]);
 
     const toggleMobileSub = (name: string) => {
@@ -143,7 +145,11 @@ export function Header() {
 
                 {/* Utilities */}
                 <div className="hidden items-center gap-4 md:flex">
-                    <button className="flex h-10 w-10 items-center justify-center rounded-full text-secondary hover:bg-secondary/10 transition-colors" aria-label="Search">
+                    <button
+                        onClick={() => setIsSearchOpen(true)}
+                        className="flex h-10 w-10 items-center justify-center rounded-full text-secondary hover:bg-secondary/10 transition-colors"
+                        aria-label="Search"
+                    >
                         <Search className="h-5 w-5" />
                     </button>
                 </div>
@@ -237,6 +243,10 @@ export function Header() {
                 isOpen={showLoginModal}
                 onClose={() => setShowLoginModal(false)}
                 onLoginSuccess={handleLoginSuccess}
+            />
+            <SearchModal
+                isOpen={isSearchOpen}
+                onClose={() => setIsSearchOpen(false)}
             />
         </header>
     );
