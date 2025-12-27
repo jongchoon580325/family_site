@@ -3,7 +3,7 @@
 23\.
 
 - **Date**: 2025-12-27 11:00:00
-- **Commit Hash**: `To be updated`
+- **Commit Hash**: `53d5efe`
 - **Summary**: 관리자 UX 개선 - Gallery 에디터에서 이미지 제목 입력 후 'Enter' 키를 누르면 즉시 업로드/저장이 실행되도록 편의성 개선.
 
 22\.
