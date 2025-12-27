@@ -3,7 +3,7 @@
 24\.
 
 - **Date**: 2025-12-27 12:00:00
-- **Commit Hash**: `To be updated`
+- **Commit Hash**: `873c7e1`
 - **Summary**: 신규 기능 추가 - 통합 검색(Global Search) 구현. 헤더의 돋보기 아이콘을 통해 스토리, 가계도(인물), 갤러리(앨범) 데이터를 한눈에 검색할 수 있는 모달 오버레이(Search Modal) 기능 적용.
 
 23\.
