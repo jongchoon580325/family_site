@@ -3,7 +3,7 @@
 22\.
 
 - **Date**: 2025-12-27 10:40:00
-- **Commit Hash**: `To be updated`
+- **Commit Hash**: `368d971`
 - **Summary**: PWA/캐싱 이슈 긴급 수정 - PC 설치 시 앱 아이콘 깨짐 방지를 위한 이미지 리사이징(192px/512px Square) 적용 및 Chrome 브라우저의 강력한 캐싱으로 인한 업데이트 지연 방지(Firebase Hosting Header 강화).
 
 21\.
