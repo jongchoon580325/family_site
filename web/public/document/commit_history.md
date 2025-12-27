@@ -3,7 +3,7 @@
 20\.
 
 - **Date**: 2025-12-27 10:00:00
-- **Commit Hash**: `To be updated`
+- **Commit Hash**: `5fef9c1`
 - **Summary**: 유지보수 기능 추가 - PC 데스크탑 앱 설치 아이콘 호환성 개선(Manifest 수정) 및 새로운 배포 감지 시 "앱 업데이트" 알림 기능(Version Checker) 구현.
 
 19\.
