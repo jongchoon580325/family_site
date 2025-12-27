@@ -6,6 +6,49 @@ import { useFamilyTreeStore } from "@/store/family-tree-store";
 import { TreeDeciduous, Globe } from "lucide-react";
 import { motion } from "framer-motion";
 
+function FamilyListCard({ parents, children, color = "stone" }: { parents: string[], children: string[], color?: "amber" | "stone" }) {
+    const isAmber = color === "amber";
+    return (
+        <motion.div
+            whileHover={{ y: -5 }}
+            className={`relative overflow-hidden rounded-2xl border-2 ${isAmber ? 'border-amber-200 bg-amber-50/50' : 'border-stone-200 bg-white'
+                } p-6 shadow-sm hover:shadow-md transition-all duration-300`}
+        >
+            {/* Background Decoration */}
+            <div className={`absolute -top-10 -right-10 w-32 h-32 rounded-full ${isAmber ? 'bg-amber-100/50' : 'bg-stone-100/50'} blur-2xl`} />
+
+            {/* Parents Header */}
+            <div className={`relative pb-4 border-b ${isAmber ? 'border-amber-200' : 'border-stone-100'} mb-4`}>
+                <h3 className={`font-serif text-lg font-bold ${isAmber ? 'text-amber-900' : 'text-stone-800'} mb-3 flex items-center gap-2`}>
+                    {isAmber ? '👑' : '👨‍👩‍👧‍👦'} Parents
+                </h3>
+                <div className="space-y-1">
+                    {parents.map((parent, idx) => (
+                        <p key={idx} className={`font-medium ${isAmber ? 'text-amber-800' : 'text-stone-700'}`}>
+                            {idx === 0 ? 'Father' : 'Mother'} : {parent}
+                        </p>
+                    ))}
+                </div>
+            </div>
+
+            {/* Children List */}
+            <div className="relative">
+                <h4 className={`text-xs font-bold uppercase tracking-wider ${isAmber ? 'text-amber-600' : 'text-stone-400'} mb-3`}>
+                    Children
+                </h4>
+                <div className="grid grid-cols-2 gap-2">
+                    {children.map((child, idx) => (
+                        <div key={idx} className={`flex items-center gap-2 px-3 py-2 rounded-lg ${isAmber ? 'bg-amber-100/50 text-amber-900' : 'bg-stone-100/50 text-stone-700'} text-sm font-medium`}>
+                            <div className={`w-1.5 h-1.5 rounded-full ${isAmber ? 'bg-amber-400' : 'bg-stone-400'}`} />
+                            {child}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </motion.div>
+    );
+}
+
 export default function TreePage() {
     const { data, language, setLanguage } = useFamilyTreeStore();
 
@@ -107,6 +150,64 @@ export default function TreePage() {
                                 <span>{language === 'ko' ? '혈연 관계' : 'Family Connection'}</span>
                             </div>
                         </div>
+                    </div>
+                </motion.section>
+
+                {/* Family List Section */}
+                <motion.section
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    viewport={{ once: true }}
+                    className="mt-16"
+                >
+                    <div className="text-center mb-10">
+                        <div className="flex items-center justify-center gap-2 text-amber-700 mb-4">
+                            <span className="text-2xl">❖</span>
+                            <span className="text-sm font-semibold uppercase tracking-wider">Family List</span>
+                        </div>
+                        <h2 className="font-serif text-2xl md:text-3xl font-bold text-amber-900">
+                            {language === 'ko' ? '가족 명단' : 'Family Member List'}
+                        </h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                        {/* 1. Root Family */}
+                        <FamilyListCard
+                            parents={["나기봉 (Na, Ki Bong)", "김필자 (Kim, Phil Ja)"]}
+                            children={["나종춘", "나종훈", "나종철", "나종섭", "나신숙"]}
+                            color="amber"
+                        />
+                        {/* 2. 1st Son Family */}
+                        <FamilyListCard
+                            parents={["나종춘 (Na, Jong Choon)", "장명애 (Jang, Myung Eai)"]}
+                            children={["나한나", "나요한"]}
+                            color="stone"
+                        />
+                        {/* 3. 3rd Son Family */}
+                        <FamilyListCard
+                            parents={["나종섭 (Na, Jong Seob)", "김양진 (Kim, Yang Jin)"]}
+                            children={["나경찬", "나경훈"]}
+                            color="stone"
+                        />
+                        {/* 4. Daughter Family */}
+                        <FamilyListCard
+                            parents={["김진수 (Kim, Jin Soo)", "나신숙 (Na, Shin Sook)"]}
+                            children={["김시후"]}
+                            color="stone"
+                        />
+                        {/* 5. Granddaughter Family */}
+                        <FamilyListCard
+                            parents={["정기원 (Jung, Ki Won)", "나한나 (Na, Han Na)"]}
+                            children={["정하윤"]}
+                            color="stone"
+                        />
+                        {/* 6. Grandson Family */}
+                        <FamilyListCard
+                            parents={["나요한 (Na, Yo Han)", "형정순 (Hyung, Jung Soon)"]}
+                            children={["나서현"]}
+                            color="stone"
+                        />
                     </div>
                 </motion.section>
             </div>
