@@ -1,15 +1,21 @@
 # Project Commit History
 
+16\.
+
+- **Date**: 2025-12-27 09:10:00
+- **Commit Hash**: `To be updated`
+- **Summary**: 배포 주소 변경 - 프로젝트 ID를 `nafmaily`에서 올바른 철자인 `nafamily`로 변경하여 `nafamily.web.app`으로 정상 접속되도록 인프라 이관 완료.
+
 15\.
 
 - **Date**: 2025-12-26 20:30:00
-- **Commit Hash**: `c488094`
+- **Commit Hash**: `56b5681`
 - **Summary**: 랜딩 페이지 "새 가족의 시작" 섹션 모바일 타이틀 2단 분리(줄바꿈) 적용.
 
 14\.
 
 - **Date**: 2025-12-26 20:20:00
-- **Commit Hash**: `a52cb12`
+- **Commit Hash**: `c5a92e3`
 - **Summary**: 랜딩 페이지 모바일 UI 개선 - 성경 구절 폰트 사이즈 축소(3xl->xl) 및 '새 생명의 시작' 섹션 타이틀 2단 분리(줄바꿈) 적용.
 
 13\.
