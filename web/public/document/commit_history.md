@@ -3,7 +3,7 @@
 16\.
 
 - **Date**: 2025-12-27 09:10:00
-- **Commit Hash**: `To be updated`
+- **Commit Hash**: `714cacf`
 - **Summary**: 배포 주소 변경 - 프로젝트 ID를 `nafmaily`에서 올바른 철자인 `nafamily`로 변경하여 `nafamily.web.app`으로 정상 접속되도록 인프라 이관 완료.
 
 15\.
