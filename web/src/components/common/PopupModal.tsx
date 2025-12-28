@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Calendar, CheckCircle } from "lucide-react";
+import { X, Calendar, CheckSquare } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSettingsStore } from "@/store/settings-store";
@@ -154,7 +154,7 @@ export function PopupModal() {
                                 onClick={handleDontShowToday}
                                 className="flex-1 py-3 text-sm text-stone-500 hover:bg-stone-50 transition-colors font-medium flex items-center justify-center gap-2"
                             >
-                                <CheckCircle className="w-4 h-4 text-stone-400" />
+                                <CheckSquare className="w-4 h-4 text-stone-500" />
                                 <span>오늘 하루 그만 보기</span>
                             </button>
                             <button
