@@ -269,7 +269,8 @@ export function PopupControlSection() {
                                 )}
                             </div>
                             <div className="flex border-t border-stone-100 divide-x divide-stone-100">
-                                <div className="flex-1 py-2 text-xs text-center text-stone-400">
+                                <div className="flex-1 py-2 text-xs text-center text-stone-400 flex items-center justify-center gap-1.5">
+                                    <CheckCircle className="w-3 h-3 text-stone-300" />
                                     오늘 하루 그만 보기
                                 </div>
                                 <div className="flex-1 py-2 text-xs text-center text-stone-800 font-bold">
