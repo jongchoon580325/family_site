@@ -259,7 +259,7 @@ export function PopupControlSection() {
                                     {localSettings.title || "Popup Title"}
                                 </h3>
                                 <div
-                                    className="text-sm text-stone-600 mb-4 whitespace-pre-line prose prose-sm max-w-none"
+                                    className="text-sm text-stone-600 mb-4 whitespace-pre-line prose prose-sm max-w-none [&>:first-child]:mt-0"
                                     dangerouslySetInnerHTML={{ __html: localSettings.content || "Popup content will appear here..." }}
                                 />
                                 {localSettings.linkUrl && (

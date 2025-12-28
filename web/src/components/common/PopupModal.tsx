@@ -133,7 +133,7 @@ export function PopupModal() {
                                 {title}
                             </h3>
                             <div
-                                className="prose prose-sm prose-stone mb-6 text-stone-600 whitespace-pre-line text-center sm:text-left max-w-none"
+                                className="prose prose-sm prose-stone mb-6 text-stone-600 whitespace-pre-line text-center sm:text-left max-w-none [&>:first-child]:mt-0"
                                 dangerouslySetInnerHTML={{ __html: content }}
                             />
 
