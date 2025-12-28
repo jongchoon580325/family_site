@@ -132,9 +132,10 @@ export function PopupModal() {
                             <h3 className="text-xl font-bold font-serif text-stone-800 mb-3 text-center sm:text-left">
                                 {title}
                             </h3>
-                            <div className="prose prose-sm prose-stone mb-6 text-stone-600 whitespace-pre-line text-center sm:text-left">
-                                {content}
-                            </div>
+                            <div
+                                className="prose prose-sm prose-stone mb-6 text-stone-600 whitespace-pre-line text-center sm:text-left max-w-none"
+                                dangerouslySetInnerHTML={{ __html: content }}
+                            />
 
                             {linkUrl && (
                                 <Link

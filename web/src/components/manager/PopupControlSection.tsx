@@ -132,13 +132,16 @@ export function PopupControlSection() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-stone-700 mb-1">Content</label>
+                        <label className="block text-sm font-medium text-stone-700 mb-1 flex items-center justify-between">
+                            Content
+                            <span className="text-xs text-rose-500 font-normal">HTML Supported (e.g. &lt;strong&gt;, &lt;br/&gt;)</span>
+                        </label>
                         <textarea
-                            rows={4}
+                            rows={6}
                             value={localSettings.content}
                             onChange={(e) => handleChange('content', e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-stone-300 focus:ring-2 focus:ring-rose-500 outline-none resize-none"
-                            placeholder="공지할 내용을 입력하세요..."
+                            className="w-full px-4 py-2 rounded-lg border border-stone-300 focus:ring-2 focus:ring-rose-500 outline-none resize-y font-mono text-sm"
+                            placeholder="공지 내용을 입력하세요. (HTML 태그 사용 가능)"
                         />
                     </div>
 
@@ -255,9 +258,10 @@ export function PopupControlSection() {
                                 <h3 className="text-lg font-bold font-serif text-stone-800 mb-2">
                                     {localSettings.title || "Popup Title"}
                                 </h3>
-                                <p className="text-sm text-stone-600 whitespace-pre-line mb-4">
-                                    {localSettings.content || "Popup content will appear here..."}
-                                </p>
+                                <div
+                                    className="text-sm text-stone-600 mb-4 whitespace-pre-line prose prose-sm max-w-none"
+                                    dangerouslySetInnerHTML={{ __html: localSettings.content || "Popup content will appear here..." }}
+                                />
                                 {localSettings.linkUrl && (
                                     <div className="block w-full py-2 mb-2 text-center bg-stone-800 text-white rounded-md text-xs font-medium opacity-80">
                                         자세히 보기
