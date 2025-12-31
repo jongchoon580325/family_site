@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MessageSquare, Save, Power, Image as ImageIcon, Link as LinkIcon, Calendar, CheckSquare, AlertTriangle } from "lucide-react";
+import { MessageSquare, Save, Power, Image as ImageIcon, Link as LinkIcon, Calendar, CheckSquare, CheckCircle, AlertTriangle } from "lucide-react";
 import { useSettingsStore, PopupSettings } from "@/store/settings-store";
 import Image from "next/image";
 import { storage } from "@/lib/firebase";
@@ -12,6 +12,7 @@ export function PopupControlSection() {
     const [localSettings, setLocalSettings] = useState<PopupSettings>(popupSettings);
     const [isSaving, setIsSaving] = useState(false);
     const [isImageUploading, setIsImageUploading] = useState(false);
+    const [isVideoUploading, setIsVideoUploading] = useState(false);
     const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
     // Initial fetch
@@ -78,6 +79,29 @@ export function PopupControlSection() {
             alert("이미지 업로드 실패");
         } finally {
             setIsImageUploading(false);
+        }
+    };
+
+    const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('video/')) {
+            alert("동영상 파일만 업로드 가능합니다.");
+            return;
+        }
+
+        setIsVideoUploading(true);
+        try {
+            const storageRef = ref(storage, `popup/${Date.now()}-${file.name}`);
+            await uploadBytes(storageRef, file);
+            const downloadUrl = await getDownloadURL(storageRef);
+            handleChange('videoUrl', downloadUrl);
+        } catch (error) {
+            console.error(error);
+            alert("동영상 업로드 실패");
+        } finally {
+            setIsVideoUploading(false);
         }
     };
 
@@ -195,6 +219,38 @@ export function PopupControlSection() {
                     </div>
 
                     <div>
+                        <label className="block text-sm font-medium text-stone-700 mb-1">Video URL (Optional)</label>
+                        <div className="flex gap-2">
+                            <div className="relative flex-1">
+                                <input
+                                    type="text"
+                                    value={localSettings.videoUrl || ''}
+                                    onChange={(e) => handleChange('videoUrl', e.target.value)}
+                                    className="w-full px-4 py-2 rounded-lg border border-stone-300 focus:ring-2 focus:ring-rose-500 outline-none pl-10"
+                                    placeholder="https://... (MP4 only supported for now)"
+                                />
+                                {/* SVG Video Icon */}
+                                <div className="absolute left-3 top-2.5 w-5 h-5 text-stone-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m22 8-6 4 6 4V8Z" /><rect width="14" height="12" x="2" y="6" rx="2" ry="2" /></svg>
+                                </div>
+                            </div>
+                            <label className="px-4 py-2 bg-stone-100 text-stone-600 rounded-lg hover:bg-stone-200 cursor-pointer transition-colors flex items-center justify-center">
+                                {isVideoUploading ? (
+                                    <span className="text-sm font-medium whitespace-nowrap">Uploading...</span>
+                                ) : (
+                                    <>
+                                        <span className="text-sm font-medium whitespace-nowrap">Upload</span>
+                                        <input type="file" className="hidden" accept="video/mp4,video/webm" onChange={handleVideoUpload} disabled={isVideoUploading} />
+                                    </>
+                                )}
+                            </label>
+                        </div>
+                        <p className="text-xs text-stone-400 mt-1">
+                            * MP4 video URL을 입력하면 이미지 대신 동영상이 재생됩니다.
+                        </p>
+                    </div>
+
+                    <div>
                         <label className="block text-sm font-medium text-stone-700 mb-1">Link URL (Optional)</label>
                         <div className="relative">
                             <input
@@ -242,7 +298,18 @@ export function PopupControlSection() {
                     <div className="bg-stone-900/5 p-4 rounded-xl border border-stone-200 h-full min-h-[400px] flex items-center justify-center relative dashed-pattern">
                         {/* Mock Popup */}
                         <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden transform scale-90 sm:scale-100 transition-all">
-                            {localSettings.imageUrl ? (
+                            {localSettings.videoUrl ? (
+                                <div className="relative w-full h-40 bg-black">
+                                    <video
+                                        src={localSettings.videoUrl}
+                                        autoPlay
+                                        loop
+                                        muted
+                                        playsInline
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            ) : localSettings.imageUrl ? (
                                 <div className="relative w-full h-40 bg-stone-100">
                                     <Image
                                         src={localSettings.imageUrl}

@@ -3,11 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { ContentLayout } from "@/components/layout/content-layout";
 import { useStoryStore, StoryType } from "@/store/story-store";
-import { Settings, Upload, Image as ImageIcon, MessageSquare, Video, Trash2, CheckCircle, Save, Quote, X, AlertTriangle, ChevronLeft, ChevronRight, Pencil, TreeDeciduous, Images, Loader2 } from "lucide-react";
+import { Settings, Upload, Image as ImageIcon, MessageSquare, Video, Trash2, CheckCircle, Save, Quote, X, AlertTriangle, ChevronLeft, ChevronRight, Pencil, TreeDeciduous, Images, Loader2, LayoutTemplate } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { FamilyTreeEditor } from "@/components/manager/FamilyTreeEditor";
 import { GalleryEditor } from "@/components/manager/GalleryEditor";
+import { HeroEditor } from "@/components/manager/HeroEditor";
 import { storage } from "@/lib/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useRouter } from "next/navigation";
@@ -17,7 +18,7 @@ import { DataBackupSection } from "@/components/manager/DataBackupSection";
 import { MouseControlSection } from "@/components/manager/MouseControlSection";
 import { PopupControlSection } from "@/components/manager/PopupControlSection";
 
-type MenuSection = 'story-upload' | 'site-settings' | 'family-tree' | 'gallery';
+type MenuSection = 'story-upload' | 'site-settings' | 'family-tree' | 'gallery' | 'hero-manager';
 
 // Custom Modal Component
 function ConfirmModal({
@@ -165,12 +166,19 @@ export default function ManagerPage() {
     // Auth Protection
     const router = useRouter();
     const { isAuthenticated } = useAuthStore();
+    const [isHydrated, setIsHydrated] = useState(false);
 
     useEffect(() => {
-        if (!isAuthenticated) {
+        setIsHydrated(true);
+    }, []);
+
+    useEffect(() => {
+        if (isHydrated && !isAuthenticated) {
             router.push('/');
         }
-    }, [isAuthenticated, router]);
+    }, [isAuthenticated, router, isHydrated]);
+
+    if (!isHydrated) return null; // or a loading spinner
 
     const handleResetConfirm = () => {
         // Firebase를 사용하므로 localStorage 초기화 불필요
@@ -224,6 +232,16 @@ export default function ManagerPage() {
                             >
                                 <Settings className="w-5 h-5" />
                                 Site Settings
+                            </button>
+                            <button
+                                onClick={() => setActiveSection('hero-manager')}
+                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${activeSection === 'hero-manager'
+                                    ? 'bg-amber-50 text-amber-800 font-medium'
+                                    : 'text-stone-600 hover:bg-stone-50'
+                                    }`}
+                            >
+                                <LayoutTemplate className="w-5 h-5" />
+                                Hero Manager
                             </button>
                             <button
                                 onClick={() => setActiveSection('family-tree')}
@@ -295,6 +313,18 @@ export default function ManagerPage() {
                                         초기화 (Reset All Data)
                                     </button>
                                 </div>
+                            </motion.div>
+                        )}
+
+                        {activeSection === 'hero-manager' && (
+                            <motion.div
+                                key="hero-manager"
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <HeroEditor />
                             </motion.div>
                         )}
 

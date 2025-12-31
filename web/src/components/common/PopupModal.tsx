@@ -2,28 +2,23 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Calendar, CheckSquare } from "lucide-react";
+import { X, Calendar, CheckSquare, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSettingsStore } from "@/store/settings-store";
 
 export function PopupModal() {
-    const { popupSettings, subscribeToSettings } = useSettingsStore(); // Don't trigger fetch here, layout already fetches? No, layout likely doesn't fetch settings yet.
-    // Actually, mouse trailer fetches settings. If PopupModal is also in layout, they might duplicate fetch.
-    // It's safer if one of them or a wrapper fetches. But duplicate fetch is okay, store prevents overwrite if already loaded?
-    // Our store `fetchSettings` sets isLoading=true, so it might reset.
-    // Better to use `subscribeToSettings` which is real-time.
-
-    // However, on initial load, we need to fetch. 
-    // Let's assume the store is initialized or we call fetch if empty.
+    const { popupSettings, subscribeToSettings } = useSettingsStore();
 
     const [isVisible, setIsVisible] = useState(false);
+    const [isMuted, setIsMuted] = useState(true); // Default muted for autoplay
 
     const {
         isActive,
         title,
         content,
         imageUrl,
+        videoUrl, // Add videoUrl here
         linkUrl,
         id,
         startDate,
@@ -115,8 +110,28 @@ export function PopupModal() {
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden z-10"
                     >
-                        {/* Image Banner */}
-                        {imageUrl && (
+                        {/* Media Banner (Video or Image) */}
+                        {videoUrl ? (
+                            <div className="relative w-full h-48 sm:h-56 bg-black group">
+                                <video
+                                    src={videoUrl}
+                                    autoPlay
+                                    loop
+                                    muted={isMuted}
+                                    playsInline
+                                    className="w-full h-full object-cover"
+                                />
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsMuted(!isMuted);
+                                    }}
+                                    className="absolute bottom-3 right-3 p-2 bg-black/50 hover:bg-black/70 rounded-full text-white transition-colors backdrop-blur-sm z-20"
+                                >
+                                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                                </button>
+                            </div>
+                        ) : imageUrl ? (
                             <div className="relative w-full h-48 sm:h-56 bg-stone-100">
                                 <Image
                                     src={imageUrl}
@@ -126,7 +141,7 @@ export function PopupModal() {
                                 />
                                 <div className="absolute inset-0 bg-black/10" />
                             </div>
-                        )}
+                        ) : null}
 
                         <div className="p-6">
                             <h3 className="text-xl font-bold font-serif text-stone-800 mb-3 text-center sm:text-left">
@@ -168,7 +183,7 @@ export function PopupModal() {
                         {/* Close Icon (Top Right) */}
                         <button
                             onClick={handleClose}
-                            className="absolute top-3 right-3 p-2 bg-black/20 hover:bg-black/30 rounded-full text-white transition-colors"
+                            className="absolute top-3 right-3 p-2 bg-black/20 hover:bg-black/30 rounded-full text-white transition-colors z-20"
                         >
                             <X className="w-4 h-4" />
                         </button>

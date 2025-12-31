@@ -5,6 +5,7 @@ import { Music, Quote, BookOpen, Award, Heart, Palette, X, ChevronLeft, ChevronR
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { InteractivePhotoCard } from "@/components/landing/InteractivePhotoCard";
 
 // Artwork data
 const ARTWORKS = [
@@ -125,13 +126,12 @@ export default function MomPage() {
                     <div className="relative group">
                         <div className="absolute -inset-4 bg-gradient-to-r from-amber-200 via-orange-200 to-amber-200 rounded-3xl blur-xl opacity-50 group-hover:opacity-70 transition-opacity duration-500" />
                         <div className="relative bg-white p-4 rounded-2xl shadow-2xl">
-                            <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-stone-100">
-                                <Image
-                                    src="/images/common/mom_book_cover.png"
+                            <div className="relative aspect-[3/4]">
+                                <InteractivePhotoCard
+                                    defaultSrc="/images/common/mom_book_cover.png"
+                                    hoverSrc="/images/mp4/mom.mp4"
                                     alt="김필자 여사님의 재활 그림책"
-                                    fill
-                                    className="object-contain"
-                                    priority
+                                    hasSound={true}
                                 />
                             </div>
                             <p className="text-center text-sm text-stone-500 mt-4 font-gowun">

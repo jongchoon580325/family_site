@@ -6,8 +6,19 @@ import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 // Hero Section Component
+import { useHeroStore } from '@/store/hero-store';
+import { useEffect } from 'react';
+import { InteractivePhotoCard } from '@/components/landing/InteractivePhotoCard';
+
+// Hero Section Component
 function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
+  const { heroData, fetchHeroData } = useHeroStore();
+
+  useEffect(() => {
+    fetchHeroData();
+  }, [fetchHeroData]);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"]
@@ -16,6 +27,19 @@ function HeroSection() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
+  // Default values
+  const displayTitle = heroData.title || (
+    <>
+      <span className="block">We are a family of</span>
+      <span className="block">Faith that serves</span>
+      <span className="block">God the Creator.</span>
+    </>
+  );
+
+  const displaySubtitle = heroData.subtitle || "창조주 하나님을 믿는 믿음의 가정입니다.";
+  const displayImage = heroData.imageSrc || "/images/landing/2th_section_02.png";
+  const showGradient = heroData.showBottomGradient !== false; // Default true
+
   return (
     <section ref={ref} className="relative h-screen overflow-hidden">
       {/* 패럴랙스 배경 이미지 */}
@@ -23,13 +47,24 @@ function HeroSection() {
         style={{ y }}
         className="absolute inset-0 w-full h-[120%]"
       >
-        <Image
-          src="/images/landing/2th_section_02.png"
-          alt="Family Hero"
-          fill
-          priority
-          className="object-cover object-top"
-        />
+        {heroData.isVideo && heroData.imageSrc ? (
+          <video
+            src={heroData.imageSrc}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover object-top"
+          />
+        ) : (
+          <Image
+            src={displayImage}
+            alt="Family Hero"
+            fill
+            priority
+            className="object-cover object-top"
+          />
+        )}
       </motion.div>
 
       {/* 어두운 오버레이 */}
@@ -41,17 +76,19 @@ function HeroSection() {
         className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10"
       >
         <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-wide uppercase">
-          <span className="block">We are a family of</span>
-          <span className="block">Faith that serves</span>
-          <span className="block">God the Creator.</span>
+          {typeof displayTitle === 'string' ? displayTitle.split('\n').map((line, i) => (
+            <span key={i} className="block">{line}</span>
+          )) : displayTitle}
         </h1>
-        <p className="mt-6 text-lg md:text-xl text-amber-200 font-medium">
-          창조주 하나님을 믿는 믿음의 가정입니다.
+        <p className="mt-6 text-lg md:text-xl text-amber-200 font-medium whitespace-pre-wrap">
+          {displaySubtitle}
         </p>
       </motion.div>
 
       {/* 하단 그라데이션 (자연스러운 전환) */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black via-black/70 to-transparent" />
+      {showGradient && (
+        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black via-black/70 to-transparent" />
+      )}
 
       {/* 스크롤 안내 */}
       <motion.div
@@ -143,13 +180,13 @@ function NewFamilySection() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="relative aspect-square rounded-lg overflow-hidden shadow-2xl border-2 border-amber-700/50"
+            className="relative aspect-square"
           >
-            <Image
-              src="/images/landing/1th_section_01.png"
+            <InteractivePhotoCard
+              defaultSrc="/images/landing/1th_section_01.png"
+              hoverSrc="/images/mp4/section-1.mp4"
               alt="나기봉 김필자 결혼식"
-              fill
-              className="object-cover"
+              hasSound={true}
             />
           </motion.div>
 
@@ -271,13 +308,13 @@ function NewLifeSection() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
-            className="relative aspect-square rounded-lg overflow-hidden shadow-2xl border-2 border-amber-700/50"
+            className="relative aspect-square"
           >
-            <Image
-              src="/images/landing/2th_section_02.png"
+            <InteractivePhotoCard
+              defaultSrc="/images/landing/2th_section_02.png"
+              hoverSrc="/images/mp4/section-2.mp4"
               alt="가족 사진"
-              fill
-              className="object-cover"
+              hasSound={true}
             />
           </motion.div>
         </div>

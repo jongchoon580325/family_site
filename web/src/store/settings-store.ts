@@ -7,6 +7,7 @@ export interface PopupSettings {
     title: string;
     content: string;
     imageUrl?: string;
+    videoUrl?: string;
     linkUrl?: string;
     id: string; // Unique ID to track "Don't show today"
     startDate?: string; // YYYY-MM-DD
